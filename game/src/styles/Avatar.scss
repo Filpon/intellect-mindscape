@@ -1,0 +1,33 @@
+.avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    position: relative;
+
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    &.normal {
+        border: 2px solid #007bff;
+    }
+
+    &.stressed {
+        border: 2px solid #d9534f;
+    }
+
+    &.rejoices {
+        border: 2px solid #5cb85c;
+    }
+}
+
+.avatar > svg {
+    width: 99%;
+    height: 99%;
+}

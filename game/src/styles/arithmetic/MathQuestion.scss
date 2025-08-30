@@ -1,0 +1,38 @@
+.math-question {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+
+    p {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    input {
+        padding: 5px;
+        font-size: 1em;
+        margin-right: 10px;
+    }
+
+    button {
+        padding: 5px 10px;
+        font-size: 1em;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #45a049;
+        }
+    }
+}
+
+.disabled-button {
+    background-color: grey;
+    cursor: not-allowed; // Change cursor to indicate it's disabled
+    opacity: 0.6; // Optional: slightly transparent
+}

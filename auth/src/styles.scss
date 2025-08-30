@@ -1,0 +1,29 @@
+// Import Bootstrap
+@import "~bootstrap/scss/bootstrap";
+@import "./styles/HomePage.scss";
+@import "./styles/Login.scss";
+@import "./styles/Spinner.scss";
+
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+      'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+      'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+}
+
+:root {
+  --bs-navbar-nav-link-padding-x: 30px;
+}
+
+.navbar-nav .nav-link {
+  padding-left: var(--bs-navbar-nav-link-padding-x);
+  padding-right: var(--bs-navbar-nav-link-padding-x);
+}
