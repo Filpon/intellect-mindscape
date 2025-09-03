@@ -6,6 +6,7 @@ paginate: true
 
 # Information Technologies Project
 
+## Intellect Mindscape
 
 ---
 
@@ -55,8 +56,19 @@ paginate: true
 
 ## Principal product structure
 
-
 ![bg right:50% w:500](./description/architecture/intellect-mindscape-arch.svg)
+
+---
+
+## Auth representation
+
+![bg right:50% w:500](./description/pictures/intellect-minsdcape-auth.png)
+
+---
+
+## Music quiz representation
+
+![bg right:50% w:500](./description/pictures/intellect-mindscape-music.png)
 
 ---
 

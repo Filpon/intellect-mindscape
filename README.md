@@ -4,6 +4,14 @@
 
 The project offers the engaging platform where users can answer questions across various topics in a game-like format. After completing the quizzes, users receive detailed statistics on their sessions, highlighting strengths and areas for improvement. Based on their performance, personalized recommendations for further study are provided, making it an excellent tool for enhancing knowledge and learning in a fun and interactive way.
 
+## Auth representation
+
+![bg right:50% w:500](./description/pictures/intellect-mindscape-auth.png)
+
+## Music quiz representation
+
+![bg right:50% w:500](./description/pictures/intellect-mindscape-music.png)
+
 ## Table of Contents
 
 - [Features](#features)
