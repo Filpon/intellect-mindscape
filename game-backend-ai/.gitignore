@@ -1,0 +1,9 @@
+pycache/
+.env
+.venv
+*.pyc
+coverage.xml
+htmlcov/
+logs
+__pycache__/
+pip-wheel-metadata/

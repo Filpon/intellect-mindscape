@@ -1,0 +1,12 @@
+logs/
+pycache/
+__pycache__/
+__pycache__
+.DS_store
+.pytest_cache/
+.venv/
+wheels/
+.env
+*.egg-info
+*.log
+*.py[oc]
