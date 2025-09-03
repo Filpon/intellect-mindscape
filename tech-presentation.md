@@ -62,7 +62,7 @@ paginate: true
 
 ## Auth representation
 
-![bg right:50% w:500](./description/pictures/intellect-minsdcape-auth.png)
+![bg right:50% w:500](./description/pictures/intellect-mindscape-auth.png)
 
 ---
 
