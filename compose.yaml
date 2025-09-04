@@ -237,11 +237,11 @@ services:
       - auth-backend
       - keycloak
 
-  game-backend-ai:
+  quiz-backend-ai:
     build:
-      context: ./game-backend-ai
+      context: ./quiz-backend-ai
       dockerfile: Dockerfile
-    image: intellect-game-backend-ai:latest
+    image: intellect-quiz-backend-ai:latest
     ports:
       - "8003:8003"
     environment:
@@ -264,11 +264,11 @@ services:
       - kafka
       - keydb
 
-  game-backend-api:
+  quiz-backend-api:
     build:
-      context: ./game-backend-api
+      context: ./quiz-backend-api
       dockerfile: Dockerfile
-    image: intellect-game-backend-api:latest
+    image: intellect-quiz-backend-api:latest
     ports:
       - "8004:8004"
     environment:
@@ -291,11 +291,11 @@ services:
       - kafka
       - keydb
 
-  game-backend-chat:
+  quiz-backend-chat:
     build:
-      context: ./game-backend-chat
+      context: ./quiz-backend-chat
       dockerfile: Dockerfile
-    image: intellect-game-backend-chat:latest
+    image: intellect-quiz-backend-chat:latest
     ports:
       - "8005:8005"
     environment:
@@ -309,11 +309,11 @@ services:
       - keydb
       - keycloak
 
-  game:
+  quiz:
     build:
-      context: ./game
+      context: ./quiz
       dockerfile: Dockerfile
-    image: intellect-game:latest
+    image: intellect-quiz:latest
     environment:
       REACT_APP_NODE_MODE: ${REACT_APP_NODE_MODE}
       REACT_APP_DOMAIN_NAME: ${REACT_APP_DOMAIN_NAME}
@@ -325,16 +325,16 @@ services:
       REACT_APP_KEYCLOAK_REALM: ${KC_REALM_NAME}
       REACT_APP_KEYCLOAK_CLIENT_ID: ${KC_CLIENT_ID}
     volumes:
-      - game:/app/build
+      - quiz:/app/build
     networks:
       - intellect-mindscape
     depends_on:
       - db
       - kafka
       - keydb
-      - game-backend-ai
-      - game-backend-api
-      - game-backend-chat
+      - quiz-backend-ai
+      - quiz-backend-api
+      - quiz-backend-chat
       - keycloak
 
   qdrant:
@@ -372,7 +372,7 @@ services:
   ollamapull:
     image: curlimages/curl:8.6.0
     command: >-
-      http://ollama:11434/api/pull -d '{"name": "${LARGE_LANGUAGE_MODEL_IN_USE}"}' LARGE_LANGUAGE_MODEL_IN_USE deepseek-r1:1.5b
+      http://ollama:11434/api/pull -d '{"name": "${LARGE_LANGUAGE_MODEL_IN_USE}"}'
     depends_on:
       ollama:
         condition: service_healthy
@@ -397,14 +397,14 @@ services:
       - admin
       - auth-backend
       - auth
-      - game-backend-api
-      - game-backend-chat
-      - game
+      - quiz-backend-api
+      - quiz-backend-chat
+      - quiz
       - kafka
       - keycloak
     volumes:
       - auth:/var/www/auth
-      - game:/var/www/game
+      - quiz:/var/www/quiz
       - admin:/var/www/admin
 
   monitoring:
@@ -429,7 +429,7 @@ configs:
 
 volumes:
   auth:
-  game:
+  quiz:
   admin:
 
 networks:

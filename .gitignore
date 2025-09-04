@@ -2,11 +2,11 @@ admin/node_modules/
 auth-backend/.pytest-cache/
 auth-backend/.venv/
 auth/node_modules/
-game-backend-ai/.pytest-cache/
-game-backend-ai/.venv/
-game-backend-api/.pytest-cache/
-game-backend-api/.venv/
-game/node_modules/
+quiz-backend-ai/.pytest-cache/
+quiz-backend-ai/.venv/
+quiz-backend-api/.pytest-cache/
+quiz-backend-api/.venv/
+quiz/node_modules/
 logs/
 qdrant_data/
 .venv/

@@ -1,0 +1,9 @@
+.build/
+build/
+dist/
+logs/
+node/
+node_modules/
+wheels/
+.DS_store
+*.log

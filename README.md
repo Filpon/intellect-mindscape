@@ -57,13 +57,13 @@ The project offers the engaging platform where users can answer questions across
 
 source ./auth-backend/.venv/bin/activate
 
-### Activation virtual environment game-backend-api
+### Activation virtual environment quiz-backend-api
 
-source ./game-backend-api/.venv/bin/activate
+source ./quiz-backend-api/.venv/bin/activate
 
-### Activation virtual environment game-backend-ai
+### Activation virtual environment quiz-backend-ai
 
-source ./game-backend-ai/.venv/bin/activate
+source ./quiz-backend-ai/.venv/bin/activate
 
 
 ### Installation
@@ -156,7 +156,7 @@ Current project API endpoints are available at:
 
 [API AUTH DOCS PAGE](http://localhost/api-auth/v1/docs)
 
-[API GAME DOCS PAGE](http://localhost/api/v1/docs)
+[API QUIZ DOCS PAGE](http://localhost/api/v1/docs)
 
 ## Avaibility, versions and additional features
 
