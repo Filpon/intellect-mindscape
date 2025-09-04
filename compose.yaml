@@ -79,10 +79,7 @@ services:
     networks:
       - intellect-mindscape
     volumes:
-      - type: tmpfs
-        target: /var/lib/postgresql/data
-        tmpfs:
-          size: 100000000
+      - ./db_data:/var/lib/postgresql/data
 
   keycloak-db:
     image: postgres:latest
@@ -101,10 +98,7 @@ services:
     networks:
       - intellect-mindscape
     volumes:
-      - type: tmpfs
-        target: /var/lib/postgresql/data
-        tmpfs:
-          size: 100000000
+      - ./keycloak_data:/var/lib/postgresql/data
 
   kafka:
     image: bitnami/kafka:${KAFKA_VERSION}
@@ -428,6 +422,8 @@ configs:
       log_level: INFO
 
 volumes:
+  db_data:
+  keycloak_data:
   auth:
   quiz:
   admin:

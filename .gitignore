@@ -2,6 +2,8 @@ admin/node_modules/
 auth-backend/.pytest-cache/
 auth-backend/.venv/
 auth/node_modules/
+db_data/
+keycloak_data/
 quiz-backend-ai/.pytest-cache/
 quiz-backend-ai/.venv/
 quiz-backend-api/.pytest-cache/
@@ -13,6 +15,8 @@ qdrant_data/
 wheels/
 .DS_store
 .env
+*.db
+*.tmp
 *.log
 *.py[oc]
 .pytest_cache
