@@ -49,8 +49,7 @@ export const checkRefreshToken = async () => {
         const response: AxiosResponse = await apiRequestAuth.post(
           '/api-auth/v1/auth/refresh',
           JSON.stringify({
-            refresh_token: refreshToken,
-            token_type: 'refresh_token',
+            token: refreshToken
           }),
         );
         if (response.status >= 400) {
@@ -108,21 +107,13 @@ export const logout = async () => {
     await apiRequestAuth.post(
       '/api-auth/v1/auth/logout',
       JSON.stringify({
-        refresh_token: refreshToken,
-        token_type: 'refresh_token',
+        token: refreshToken
       }),
     );
     // Clear tokens from local storage
   } catch (error) {
     console.error(error);
   } finally {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('access_expires');
-    localStorage.removeItem('refresh_expires');
-    sessionStorage.removeItem('access_token');
-    sessionStorage.removeItem('refresh_token');
-    sessionStorage.removeItem('access_expires');
-    sessionStorage.removeItem('refresh_expires');
+    clearTokens();
   }
 };

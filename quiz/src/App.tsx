@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Game from './components/Game.tsx';
 import Navbar from './components/Navbar.tsx';
 import Remarks from './components/remarks/Remarks.tsx';
+import { Spinner } from './components/Spinner.tsx';
 import Statistics from './components/statistics/Statistics.tsx';
 import { apiRequest } from './services/AxiosRequest.ts';
 import {
@@ -11,6 +12,7 @@ import {
   logout,
 } from './services/Tokens.ts'; // Import the token functions
 import './styles/App.scss';
+import './styles/Spinner.scss';
 
 interface Translations {
   [key: string]: string; // Dynamic keys for translations
@@ -40,20 +42,20 @@ export const App: React.FC = () => {
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
+  const isFetchedUserSubId = useRef(false);
+
   useEffect(() => {
     const fetchUserSubId = async () => {
       try {
-        // Make a request to the /introspect endpoint
         const response = await introspectToken();
-        // Check if the response contains the user ID
         if (response && response.data.active && response.data.sub) {
           setIsAuth(true);
-          setUserSubId(response.data.sub); // Set user_id in App.tsx
-          if (response.data.groups && response.data.groups.includes('admin')) {
-            setIsAdmin(true); // Set admin status
-          } else {
-            setIsAdmin(false); // Not admin
+          // Update userSubId only if it was changed
+          if (userSubId !== response.data.sub) {
+            setUserSubId(response.data.sub);
           }
+          // Check for admin status
+          setIsAdmin(response.data.groups?.includes('admin') || false);
         } else {
           setUserSubId(null);
           await handleLogout();
@@ -63,8 +65,12 @@ export const App: React.FC = () => {
       }
     };
 
-    if (process.env.REACT_APP_NODE_MODE !== 'development') {
+    if (
+      process.env.REACT_APP_NODE_MODE !== 'development' &&
+      !isFetchedUserSubId.current
+    ) {
       fetchUserSubId();
+      isFetchedUserSubId.current = true;
     } else {
       setIsAuth(true);
     }
@@ -84,6 +90,10 @@ export const App: React.FC = () => {
 
     fetchTranslations();
   }, [language]);
+
+  const switchLanguage = (languageSelected: any) => {
+    setLanguage(languageSelected);
+  };
 
   useEffect(() => {
     if (process.env.REACT_APP_NODE_MODE === 'development') {
@@ -185,7 +195,7 @@ export const App: React.FC = () => {
             translations={translations}
             onGameStatistics={handleGameStatistics}
             isGameStarted={isGameStarted}
-            setLanguage={setLanguage}
+            switchLanguage={switchLanguage}
             onGameRemarks={handleGameRemarks}
             onGameLogout={handleLogout}
             isGameStatistics={isGameStatistics}
@@ -290,9 +300,7 @@ export const App: React.FC = () => {
           />
           <Route
             path="/logout"
-            element={
-              isAuth ? <h2>{translations.logging_out}</h2> : <Navigate to="/" />
-            }
+            element={isAuth ? <Spinner /> : <Navigate to="/" />}
           />
         </Routes>
       </div>

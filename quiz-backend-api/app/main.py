@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from pathlib import Path
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -71,7 +72,11 @@ async def startup():
     scheduler.add_job(check_failed_games, "interval", minutes=1)
     for mode in game_modes_names:
         scheduler.add_job(
-            compare_and_update_answers_by_mode, "interval", minutes=5, args=[mode]
+            compare_and_update_answers_by_mode,
+            "interval",
+            minutes=1,
+            args=[mode],
+            next_run_time=datetime.now(),  # Running job immediately and then every minute
         )
         logger.info("Scheduler job started for mode: %s", mode)
     scheduler.start()

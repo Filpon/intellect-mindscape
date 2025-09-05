@@ -8,9 +8,7 @@ class Token(BaseModel):
     :param string refresh_token: The refresh token string.
     :param str token_type: The type of the token (e.g. "Bearer")
     """
-    access_token: str
-    refresh_token: str
-    token_type: str
+    token: str
 
 
 class RefreshToken(BaseModel):

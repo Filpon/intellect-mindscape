@@ -14,7 +14,7 @@ interface NavbarProps {
   isGameStarted: boolean; // Add gameStarted prop
   isGameStatistics: boolean;
   isGameRemarks: boolean;
-  setLanguage: (lang: 'en' | 'ru') => void; // New prop for setting language
+  switchLanguage: (lang: 'en' | 'ru') => void; // New prop for setting language
   translations: Translations;
   isAdmin: boolean;
 }
@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({
   isGameStatistics,
   isGameRemarks,
   translations,
-  setLanguage,
+  switchLanguage,
   isAdmin,
 }) => {
   return (
@@ -36,8 +36,8 @@ const Navbar: React.FC<NavbarProps> = ({
       <ul className="navbar-list">
         {!isGameStarted && (
           <li className="navbar-item">
-            <button onClick={() => setLanguage('en')}>EN</button>
-            <button onClick={() => setLanguage('ru')}>RU</button>
+            <button onClick={() => switchLanguage('en')}>EN</button>
+            <button onClick={() => switchLanguage('ru')}>RU</button>
           </li>
         )}
 
