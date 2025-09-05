@@ -94,7 +94,7 @@ const TrigonometryQuestion: React.FC<TrigonometryQuestionProps> = ({
 
   return (
     <div>
-      <h2>{question.question}{question.correctAnswer}</h2>
+      <h2>{question.question}</h2>
       <div>
         {possibleAnswers.map((answer, index) => (
           <button
