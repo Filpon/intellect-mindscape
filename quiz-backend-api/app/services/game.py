@@ -52,7 +52,7 @@ def verify_permission(required_roles: list):
             headers = {"Authorization": f"Bearer {token}"}
             async with httpx.AsyncClient() as client:
                 token_info_response = await client.post(
-                    f"{AUTH_BACKEND_DOMAIN}/api-auth/v1/auth/verify-token",
+                    f"{AUTH_BACKEND_DOMAIN}/api-auth/v1/auth/introspect",
                     headers=headers,
                 )
 
@@ -104,7 +104,7 @@ async def verify_token(token: str = Depends(oauth2_scheme)) -> dict[str, str]:
 
         async with httpx.AsyncClient() as client:
             token_info_response = await client.post(
-                f"{AUTH_BACKEND_DOMAIN}/api-auth/v1/auth/verify-token", headers=headers
+                f"{AUTH_BACKEND_DOMAIN}/api-auth/v1/auth/introspect", headers=headers
             )
 
             token_info_response.raise_for_status()  # Raises an error for 4xx/5xx responses

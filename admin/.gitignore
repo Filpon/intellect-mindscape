@@ -1,0 +1,11 @@
+build/
+.dist/
+dist/
+node/
+node_modules/
+logs/
+.DS_store
+.venv/
+wheels/
+.env
+*.log

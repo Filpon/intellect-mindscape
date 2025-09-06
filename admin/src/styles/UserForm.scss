@@ -1,0 +1,80 @@
+$form-background: #f9f9f9;
+$form-border-radius: 8px;
+$form-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$input-border-color: #ced4da;
+$input-focus-border-color: $primary-color;
+
+.user-form {
+  background-color: $form-background;
+  border-radius: $form-border-radius;
+  box-shadow: $form-shadow;
+  padding: 20px;
+  max-width: 400px;
+  margin: 20px auto;
+  font-family: 'Arial', sans-serif;
+
+  h3 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: $primary-color;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid $input-border-color;
+    border-radius: $form-border-radius;
+    transition: border-color 0.3s;
+
+    &:focus {
+      border-color: $input-focus-border-color;
+      outline: none;
+    }
+
+    &::placeholder {
+      color: $input-border-color;
+    }
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: $form-border-radius;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+
+    &.create {
+      background-color: $primary-color;
+      color: white;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+
+    &.update {
+      background-color: $secondary-color;
+      color: white;
+
+      &:hover {
+        background-color: darken($secondary-color, 10%);
+      }
+    }
+
+    &.cancel {
+      background-color: transparent;
+      color: $primary-color;
+      border: 1px solid $primary-color;
+
+      &:hover {
+        background-color: $primary-color;
+        color: white;
+      }
+    }
+  }
+}
