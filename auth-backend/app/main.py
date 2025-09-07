@@ -10,7 +10,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIASGIMiddleware
 from slowapi.util import get_remote_address
 
-
+from app.caches.keydb import cache_span
 from app.configs.logging_handler import configure_logging_handler
 from app.middlewares.logging_middleware import LoggingMiddleware
 from app.routers import auth
@@ -93,7 +93,9 @@ async def startup() -> None:
     Starting database creation
 
     """
-    logger.info("Database creation was finished")
+    async with cache_span(app) as cache:
+        app.state.cache = cache
+        logger.info("Database creation was finished")
 
 
 if __name__ == "__main__":

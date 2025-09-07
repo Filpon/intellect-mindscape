@@ -1,9 +1,10 @@
+import json
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.responses import JSONResponse, RedirectResponse
-from fastapi_cache.decorator import cache
 
+from app.caches.keydb import get_cache
 from app.configs.logging_handler import configure_logging_handler
 from app.schemas.auth import (
     CustomOAuth2PasswordRequestForm,
@@ -48,6 +49,7 @@ async def get_current_user(
 @router.post("/register")
 async def register_user(
     form_data: Annotated[CustomOAuth2PasswordRequestForm, Form()],
+    cache_application=Depends(get_cache),
 ) -> JSONResponse:  # pylint: disable=W0613
     """
     User registering
@@ -56,6 +58,7 @@ async def register_user(
     :returns dict token: Auth token obtaining
     """
     register_user_result = await register(form_data.username, form_data.password)
+    await cache_application.redis.delete("all_users_fetched")
     logger.info("User '%s' was registered successfully", form_data.username)
     return register_user_result
 
@@ -137,10 +140,10 @@ async def generate_auth() -> RedirectResponse:
 
 
 @router.get("/users")
-@cache(expire=60)
 async def fetch_all_users(
     _: dict[str, Any] = Depends(verify_permission(required_roles=["admin"])),
-) -> dict[str, list[dict[str, Any]]]:
+    cache_application=Depends(get_cache),
+) -> dict:
     """
     Fetching all users
 
@@ -149,9 +152,17 @@ async def fetch_all_users(
     :param _ dict: A dictionary containing the request context, used for permission verification
     :returns dict[str, list[dict[str, Any]]]: List of users dictionaries
     """
+    cached_users = await cache_application.redis.get(name="all_users_fetched")
+    if cached_users:
+        logger.info("Fetching users from cache was successful")
+        return {"users": json.loads(cached_users), "cached": True}
+
     fetch_users_result = await fetch_users()
+    await cache_application.redis.set(
+        name="all_users_fetched", value=json.dumps(fetch_users_result["users"]), ex=60
+    )
     logger.info("Fetching users was successful")
-    return fetch_users_result
+    return {"users": fetch_users_result["users"], "cached": False}
 
 
 @router.get("/callback")
@@ -177,6 +188,7 @@ async def callback(request: Request) -> TokenResponseCallbackSchema:
 async def delete_user_by_id(
     user_id: str,
     _: dict[str, Any] = Depends(verify_permission(required_roles=["admin"])),
+    cache_application=Depends(get_cache),
 ) -> dict[str, str]:
     """
     Deleting user by ID
@@ -188,6 +200,7 @@ async def delete_user_by_id(
     """
     await delete_user(user_id=user_id)
     logger.info("User with ID %s was deleted", user_id)
+    await cache_application.redis.delete("all_users_fetched")
     return {"message": f"User with ID {user_id} was deleted"}
 
 
@@ -196,6 +209,7 @@ async def update_user_by_id(
     user_id: str,
     user_update: UserUpdate,
     _: dict[str, Any] = Depends(verify_permission(required_roles=["admin"])),
+    cache_application=Depends(get_cache),
 ) -> dict[str, str]:
     """
     Updating user by ID
@@ -212,6 +226,7 @@ async def update_user_by_id(
         ]
     }
     await update_user(user_id=user_id, user_data=user_data)
+    await cache_application.redis.delete("all_users_fetched")
     logger.info("User with ID %s was updated", user_id)
     return {"message": f"User with ID {user_id} was updated"}
 

@@ -4,14 +4,18 @@ from contextlib import asynccontextmanager
 from typing import Final
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 
+from app.configs.logging_handler import configure_logging_handler
 from redis import asyncio as aioredis
 
 load_dotenv()
 
+logger = configure_logging_handler()
+
+KEYDB_PASSWORD: Final[str] = os.getenv("KEYDB_PASSWORD")
 KEYDB_PORT: Final[str] = os.getenv("KEYDB_PORT")
 
 
@@ -31,6 +35,19 @@ async def cache_span(_: FastAPI) -> AsyncIterator[None]:
     after initializing the cache. The cache availability within
     the context block
     """
-    redis = aioredis.from_url(f"redis://keydb:{KEYDB_PORT}")
-    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
-    yield
+    keydb = aioredis.from_url(f"redis://:{KEYDB_PASSWORD}@keydb:{KEYDB_PORT}")
+    FastAPICache.init(backend=RedisBackend(keydb), prefix="fastapi-cache")
+    yield FastAPICache.get_backend()
+
+
+async def get_cache(request: Request):
+    """
+    Dependency function to retrieve the KeyDB cache from the FastAPI application state
+
+    :param Request request: The FastAPI request object, which provides access
+    to the application state
+
+    :returns: The KeyDB cache instance stored in the application state
+    """
+    logger.info("Application cache instance was used")
+    return request.app.state.cache
