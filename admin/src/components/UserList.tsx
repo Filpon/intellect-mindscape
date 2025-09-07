@@ -11,12 +11,16 @@ import { ModalWindowConfirm } from './common/ModalWindowConfirm.tsx';
 import NavBar from './NavBar.tsx';
 import { handleNavigate } from '../utils/commonUtils.ts';
 
-const UserList: React.FC = () => {
+interface UserListProps {
+  currentUserId: string | null;
+}
+
+const UserList: React.FC<UserListProps> = ({ currentUserId }) => {
   const [users, setUsers] = useState<
-    Array<{ id: number; username: string; email: string }>
+    Array<{ id: string; username: string; email: string }>
   >([]);
   const [selectedUser, setSelectedUser] = useState<{
-    id: number;
+    id: string;
     username: string;
     email: string;
   } | null>(null);
@@ -25,7 +29,7 @@ const UserList: React.FC = () => {
   const [showModalConfirm, setShowModalConfirm] = useState(false);
   const [title, setTitle] = useState('Notification');
   const [message, setMessage] = useState('');
-  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
 
   const fetchUsersList = async () => {
     try {
@@ -48,7 +52,7 @@ const UserList: React.FC = () => {
     fetchUsersList();
   }, []);
 
-  const handleDeleteConfirmation = async (userId: number) => {
+  const handleDeleteConfirmation = async (userId: string) => {
     setUserToDelete(userId);
     setTitle('Confirmation');
     setMessage('Are you sure you want to delete this user?');
@@ -87,7 +91,7 @@ const UserList: React.FC = () => {
             users.map((user) => (
               <li key={user.id}>
                 {user.username} - {user.email}
-                <button onClick={() => handleDeleteConfirmation(user.id)}>
+                <button onClick={() => handleDeleteConfirmation(user.id)} disabled={user.id === currentUserId}>
                   Delete
                 </button>
                 <button onClick={() => setSelectedUser(user)}>Edit</button>

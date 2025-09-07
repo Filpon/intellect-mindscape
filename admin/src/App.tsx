@@ -10,7 +10,7 @@ import {
 } from './services/Tokens.ts';
 
 const App: React.FC = () => {
-  const [_, setUserSubId] = useState<string | null>(null);
+  const [userSubId, setUserSubId] = useState<string | null>(null);
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const [__, setIsAdmin] = useState<boolean>(false);
 
@@ -79,7 +79,7 @@ const App: React.FC = () => {
         />
         <Route
           path="/users"
-          element={isAuth ? <UserList /> : <Navigate to="/" />}
+          element={isAuth ? <UserList currentUserId={userSubId} /> : <Navigate to="/" />}
         />
         <Route
           path="/games"
