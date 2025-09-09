@@ -82,7 +82,6 @@ const Game: React.FC<GameProps> = ({
       setWs(websocket);
     }
     if (mode === 'arithmetic' && ws && !isGameOver) {
-
       ws.onmessage = (event) => {
         const question = JSON.parse(event.data);
         setCurrentQuestion(question); // Set the current question from WebSocket

@@ -11,7 +11,10 @@ const Chat: React.FC<ChatProps> = ({ mode, onAnswer }) => {
   const [input, setInput] = useState<string>('');
 
   const ws = useMemo(
-    () => new WebSocket(`ws://${process.env.REACT_APP_BACKEND_DOMEN_CHAT}${process.env.REACT_APP_DOMAIN_NAME}:8005/ws`),
+    () =>
+      new WebSocket(
+        `ws://${process.env.REACT_APP_BACKEND_DOMEN_CHAT}${process.env.REACT_APP_DOMAIN_NAME}:8005/ws`,
+      ),
     [],
   );
 
