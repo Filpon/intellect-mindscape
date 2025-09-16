@@ -4,4 +4,4 @@ COPY import-realm.sh /tmp/import/import-realm.sh
 COPY new-client-initial.json /tmp/import/new-client-initial.json
 COPY new-user-initial.json /tmp/import/new-user-initial.json
 COPY sub-token.json /tmp/import/sub-token.json
-ENTRYPOINT ["bash", "/tmp/import/import-realm.sh"]
+ENTRYPOINT ["/tmp/import/import-realm.sh"]

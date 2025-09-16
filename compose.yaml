@@ -10,7 +10,6 @@ services:
       context: ./keycloak
       dockerfile: Dockerfile
     image: intellect-keycloak:latest
-    command: "start-dev &"
     restart: on-failure
     user: "0"
     environment:
@@ -26,6 +25,7 @@ services:
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
       KC_LOG_LEVEL: ${KC_LOG_LEVEL}
+      KC_PORT: ${KC_PORT}
       KC_REALM_NAME: ${KC_REALM_NAME}
       KC_REALM_COMMON: ${KC_REALM_COMMON}
       KC_REALM_COMMON_CLIENT: ${KC_REALM_COMMON_CLIENT}
@@ -39,6 +39,9 @@ services:
       KC_CORS_ALLOWED_ORIGINS: '*'
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYCLOAK_POSTGRES_USER: ${KEYCLOAK_POSTGRES_USER}
+      KEYCLOAK_POSTGRES_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD}
+      KEYCLOAK_POSTGRES_DB: ${KEYCLOAK_POSTGRES_DB}
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       GF_URL: ${GF_HOSTNAME}:${GF_SERVER_HTTP_PORT}
@@ -52,7 +55,7 @@ services:
       keycloak-db:
         condition: service_healthy
     ports:
-      - 8080:8080
+      - ${KC_PORT}:${KC_PORT}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://0.0.0.0:8080/realms/${KC_REALM_NAME}"]
       start_period: 10s
@@ -350,7 +353,9 @@ services:
       - ./qdrant_data:/qdrant/storage
 
   ollama:
-    image: ollama/ollama:0.10.1
+    build:
+      context: ./ollama
+      dockerfile: Dockerfile
     ports:
       - "11434:11434"
     restart: unless-stopped
