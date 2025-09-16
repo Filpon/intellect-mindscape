@@ -180,8 +180,9 @@ services:
       dockerfile: Dockerfile
     image: intellect-auth-backend:latest
     ports:
-      - "8002:8002"
+      - ${AUTH_BACKEND_PORT}:${AUTH_BACKEND_PORT}
     environment:
+      - AUTH_BACKEND_PORT=${AUTH_BACKEND_PORT}
       - DATABASE_URL=${DATABASE_USERS_URL}
       - KEYCLOAK_URL=http://localhost:${KC_PORT}/auth/realms/${KC_REALM_COMMON}
       - KC_HOSTNAME=${KC_HOSTNAME}
@@ -204,10 +205,12 @@ services:
       - KAFKA_PORT_LISTENER=${KAFKA_PORT_LISTENER}
       - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
       - REACT_APP_DOMAIN_NAME=${REACT_APP_DOMAIN_NAME}
+      - TESTING=${TESTING}
     networks:
       - intellect-mindscape
     depends_on:
       - db
+      - keycloak
       - keycloak-db
       - kafka
       - keydb

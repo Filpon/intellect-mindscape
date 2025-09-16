@@ -1,4 +1,5 @@
 # pylint: skip-file
+import json
 import os
 import time
 from datetime import datetime
@@ -8,7 +9,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from dotenv import load_dotenv
 from fastapi import status
-from httpx import AsyncClient, ConnectError, Response
+from httpx import AsyncClient, Client, ConnectError, ReadError, Response
 
 from .data_generating_testing import (
     generate_random_keycloak_token,
@@ -17,9 +18,13 @@ from .data_generating_testing import (
 
 load_dotenv()
 
-# BACKEND_PORT = os.getenv("BACKEND_PORT")
+AUTH_BACKEND_PORT = os.getenv("AUTH_BACKEND_PORT")
 REACT_APP_BACKEND_URL = os.getenv("REACT_APP_BACKEND_URL")
 REACT_APP_DOMAIN_NAME = os.getenv("REACT_APP_DOMAIN_NAME")
+KEYCLOAK_ADMIN = os.getenv("KEYCLOAK_ADMIN")
+KEYCLOAK_ADMIN_PASSWORD = os.getenv("KEYCLOAK_ADMIN_PASSWORD")
+KC_PORT = os.getenv("KC_PORT")
+QUIZ_BACKEND_PORT = os.getenv("QUIZ_BACKEND_PORT")
 
 USER, PASSWORD = generate_test_credentials()
 ACCESS_TOKEN = generate_random_keycloak_token()
@@ -187,7 +192,7 @@ async def client_mock_keycloak():
             yield client, mock_keycloak
 
 
-async def is_responsive(url):
+def is_responsive(url) -> bool:
     """
     Check if the input URL is responsive
 
@@ -196,11 +201,11 @@ async def is_responsive(url):
     :return bool: True if the response status code is successful, False otherwise
     """
     try:
-        async with AsyncClient() as client:
-            response = await client.get(url=url)
-            if response.status_code == status.HTTP_200_OK:
+        with Client() as client:
+            response = client.get(url=url)
+            if response.status_code in {status.HTTP_200_OK, status.HTTP_302_FOUND}:
                 return True
-    except ConnectError:
+    except (ConnectError, ReadError):
         return False
 
 
@@ -229,26 +234,66 @@ async def backend_container_runner(docker_ip, docker_services):
 
     :yield AsyncClient: An AsyncClient instance for the backend service
     """
-    # try:
-    #     BACKEND_PORT_VALUE = int(BACKEND_PORT)
-    # except ValueError as excp:
-    #     raise ValueError("Converting value to integer error") from excp
+    try:
+        AUTH_BACKEND_PORT_VALUE = int(AUTH_BACKEND_PORT)
+    except ValueError as excp:
+        raise ValueError("Converting value to integer error") from excp
 
-    port = docker_services.port_for("auth-backend", 8002)
-    url = f"http://{docker_ip}:{port}"
+    try:
+        KC_PORT_VALUE = int(KC_PORT)
+    except ValueError as excp:
+        raise ValueError("Converting value to integer error") from excp
+
+    port_backend = docker_services.port_for("auth-backend", AUTH_BACKEND_PORT_VALUE)
+    url_backend = f"http://{docker_ip}:{port_backend}/check-auth"
+    port_keycloak = docker_services.port_for("keycloak", KC_PORT_VALUE)
+    url_keycloak = f"http://{docker_ip}:{port_keycloak}"
     docker_services.wait_until_responsive(
-        timeout=310, pause=0.1, check=lambda: is_responsive(url=url)
+        timeout=410, pause=1, check=lambda: is_responsive(url=url_backend)
     )
-    async with AsyncClient(base_url=url) as client:
-        time.sleep(7)
+    docker_services.wait_until_responsive(
+        timeout=410, pause=1, check=lambda: is_responsive(url=url_keycloak)
+    )
+    url_backend = url_backend.replace("/check-auth", "")
+    async with AsyncClient(base_url=url_backend) as client:
+        time.sleep(5)
         yield client
 
 
-@pytest.fixture
-def current_access_token():
+@pytest.fixture(scope="function")
+async def admin_user_tokens(backend_container_runner) -> dict[str, str]:
     """
-    Fixture that provides access token for Keycloak container
+    Fixture that provides admin users access tokens for Keycloak container
 
-    :return str ACCESS_TOKEN: Access token
+    :return dict[str, str]: Access tokens
     """
-    return ACCESS_TOKEN
+
+    response = await backend_container_runner.post(
+        "/api-auth/v1/auth/token",
+        data={"username": KEYCLOAK_ADMIN, "password": KEYCLOAK_ADMIN_PASSWORD},
+    )
+    return {
+        "access_token": json.loads(response.text)["access_token"],
+        "refresh_token": json.loads(response.text)["refresh_token"],
+    }
+
+
+@pytest.fixture(scope="function")
+async def common_user_tokens(backend_container_runner) -> dict[str, str]:
+    """
+    Fixture that provides common users access tokens for Keycloak container
+
+    :return dict[str, str]: Access tokens
+    """
+    await backend_container_runner.post(
+        "/api-auth/v1/auth/register",
+        data={"username": USER, "password": PASSWORD},
+    )
+    response = await backend_container_runner.post(
+        "/api-auth/v1/auth/token",
+        data={"username": USER, "password": PASSWORD},
+    )
+    return {
+        "access_token": json.loads(response.text)["access_token"],
+        "refresh_token": json.loads(response.text)["refresh_token"],
+    }

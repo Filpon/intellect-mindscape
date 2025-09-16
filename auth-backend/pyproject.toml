@@ -4,6 +4,15 @@ version = "0.1.0"
 description = "Description"
 readme = "README.md"
 requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
+# Specify the test paths
+testpaths = ["tests"]
+env = [
+    "TESTING=true",
+]
+
 dependencies = [
     "build==1.2.2.post1",
     "cachecontrol==0.14.1",
@@ -91,4 +100,5 @@ dependencies = [
     "slowapi>=0.1.9",
     "trio>=0.30.0",
     "pytest-docker>=3.2.3",
+    "pytest-env>=1.1.5",
 ]

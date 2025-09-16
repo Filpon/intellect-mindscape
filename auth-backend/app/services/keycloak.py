@@ -57,7 +57,8 @@ keycloak_openid = KeycloakOpenID(
     realm_name=KC_REALM_NAME,
     client_id=KC_REALM_COMMON_CLIENT,
     client_secret_key=KC_CLIENT_SECRET_KEY,
-    max_retries=10,
+    timeout=180,
+    max_retries=50,
 )
 
 keycloak_admin = KeycloakAdmin(
@@ -65,7 +66,8 @@ keycloak_admin = KeycloakAdmin(
     username=KC_REALM_COMMON_USER,
     password=KC_REALM_COMMON_USER_PASSWORD,
     user_realm_name=KC_REALM_NAME,
-    max_retries=10,
+    timeout=180,
+    max_retries=50,
     verify=True,
 )
 

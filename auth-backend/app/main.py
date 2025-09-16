@@ -24,11 +24,14 @@ logger = configure_logging_handler()
 ORIGINS = os.getenv("ORIGINS")
 
 # FastAPI app creation
-app = FastAPI(docs_url="/api-auth/v1/docs", openapi_url="/api-auth/v1/openapi")
-limiter = Limiter(key_func=get_remote_address, application_limits=["9/5seconds"])
-app.add_middleware(middleware_class=SlowAPIASGIMiddleware)
+app = FastAPI(docs_url="/api/v1/docs", openapi_url="/api/v1/openapi")
 app.add_middleware(middleware_class=LoggingMiddleware)
-app.state.limiter = limiter
+logger.info("TESTING=%s", os.getenv('TESTING'))
+if os.getenv("TESTING", "") != "true":
+    logger.info("Include SlowAPIASGIMiddleware")
+    limiter = Limiter(key_func=get_remote_address, application_limits=["9/5seconds"])
+    app.add_middleware(middleware_class=SlowAPIASGIMiddleware)
+    app.state.limiter = limiter
 
 
 # # Handling RateLimitExceeded exception
