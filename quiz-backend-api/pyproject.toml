@@ -2,6 +2,9 @@
 asyncio_default_fixture_loop_scope = "function"
 # Specify the test paths
 testpaths = ["tests"]
+env = [
+    "TESTING=true",
+]
 
 # Add any additional options you want to configure
 addopts = "-v --tb=short"

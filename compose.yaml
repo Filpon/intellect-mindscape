@@ -269,20 +269,24 @@ services:
       dockerfile: Dockerfile
     image: intellect-quiz-backend-api:latest
     ports:
-      - "8004:8004"
+      - ${QUIZ_BACKEND_PORT}:${QUIZ_BACKEND_PORT}
     environment:
+      - AUTH_BACKEND_PORT=${AUTH_BACKEND_PORT}
       - BACKEND_POSTGRES_USER=${BACKEND_POSTGRES_USER}
       - BACKEND_POSTGRES_PASSWORD=${BACKEND_POSTGRES_PASSWORD}
       - BACKEND_POSTGRES_DB=${BACKEND_POSTGRES_DB} 
       - DATABASE_URL=${DATABASE_URL}
       - REACT_APP_NODE_MODE=${REACT_APP_NODE_MODE}
       - ORIGINS=${ORIGINS}
+      - KC_PORT=${KC_PORT}
       - KEYCLOAK_URL=http://keycloak:8080/auth/realms/${KC_REALM_COMMON}
+      - QUIZ_BACKEND_PORT=${QUIZ_BACKEND_PORT}
       - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
       - REACT_APP_BACKEND_GAME_URL=${REACT_APP_BACKEND_GAME_URL}
       - REACT_APP_DOMAIN_NAME=${REACT_APP_DOMAIN_NAME}
       - REACT_APP_FRONTEND_GAME_URL=${REACT_APP_FRONTEND_GAME_URL}
       - KEYDB_PASSWORD=${KEYDB_PASSWORD}  # Set KeyDB password
+      - TESTING=${TESTING}
     networks:
       - intellect-mindscape
     depends_on:
