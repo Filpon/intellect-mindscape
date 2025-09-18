@@ -1,5 +1,4 @@
 # pylint: skip-file
-import json
 import os
 import time
 from datetime import datetime
@@ -273,8 +272,8 @@ async def admin_user_tokens(backend_container_runner) -> dict[str, str]:
         data={"username": KEYCLOAK_ADMIN, "password": KEYCLOAK_ADMIN_PASSWORD},
     )
     return {
-        "access_token": json.loads(response.text)["access_token"],
-        "refresh_token": json.loads(response.text)["refresh_token"],
+        "access_token": response.json()["access_token"],
+        "refresh_token": response.json()["refresh_token"],
     }
 
 
@@ -294,6 +293,6 @@ async def common_user_tokens(backend_container_runner) -> dict[str, str]:
         data={"username": USER, "password": PASSWORD},
     )
     return {
-        "access_token": json.loads(response.text)["access_token"],
-        "refresh_token": json.loads(response.text)["refresh_token"],
+        "access_token": response.json()["access_token"],
+        "refresh_token": response.json()["refresh_token"],
     }

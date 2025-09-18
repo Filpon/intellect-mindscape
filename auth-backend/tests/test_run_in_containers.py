@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from fastapi import status
 
@@ -391,7 +389,7 @@ async def test_common_user_introspect_token(
     )
     assert response.status_code == status.HTTP_200_OK
     assert len(response.json().get("groups", []))
-    assert "admin" not in json.loads(response.text).get("groups", [])
+    assert "admin" not in response.json().get("groups", [])
 
 
 @pytest.mark.anyio

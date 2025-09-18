@@ -1,4 +1,3 @@
-import json
 import random
 from datetime import datetime, timezone
 
@@ -128,7 +127,7 @@ async def test_admin_user_submit_game_result(
     incorrect_score = random.randint(5, 20)
     total_score = correct_score + incorrect_score
     game_result = {
-        "id": json.loads(response_creation.text)["id"],
+        "id": response_creation.json()["id"],
         "status": "completed",
         "finished_at": datetime.now(timezone.utc).isoformat(),
         "correct_score": correct_score,
@@ -182,7 +181,7 @@ async def test_common_user_submit_game_result(
     total_score = correct_score + incorrect_score
 
     game_result = {
-        "id": json.loads(response_creation.text)["id"],
+        "id": response_creation.json()["id"],
         "status": "completed",
         "finished_at": datetime.now(timezone.utc).isoformat(),
         "correct_score": correct_score,
