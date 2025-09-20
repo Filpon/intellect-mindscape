@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Awaitable, Callable
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -16,7 +16,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
     """
 
     async def dispatch(
-        self, request: Request, call_next: Callable[[Request], Response]
+        self, request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
         """
         Processing the incoming request and logging the details
@@ -26,7 +26,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         it logs the response status code along with the request details
 
         :param Request request: The incoming request object
-        :param Callable[[Request], Response] call_next: Function calling
+        :param Callable[[Request], Awaitable[Response]] call_next: Function calling
         the next middleware or endpoint
 
         :return Response: The response object returned by the next middleware or endpoint

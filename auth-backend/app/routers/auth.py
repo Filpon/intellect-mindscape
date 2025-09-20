@@ -49,7 +49,7 @@ async def get_current_user(
 @router.post("/register")
 async def register_user(
     form_data: Annotated[CustomOAuth2PasswordRequestForm, Form()],
-    cache_application=Depends(get_cache),
+    cache_application: Any = Depends(get_cache),
 ) -> JSONResponse:  # pylint: disable=W0613
     """
     User registering
@@ -142,8 +142,8 @@ async def generate_auth() -> RedirectResponse:
 @router.get("/users")
 async def fetch_all_users(
     _: dict[str, Any] = Depends(verify_permission(required_roles=["admin"])),
-    cache_application=Depends(get_cache),
-) -> dict:
+    cache_application: Any = Depends(get_cache),
+) -> dict[str, Any]:
     """
     Fetching all users
 
@@ -188,7 +188,7 @@ async def callback(request: Request) -> TokenResponseCallbackSchema:
 async def delete_user_by_id(
     user_id: str,
     _: dict[str, Any] = Depends(verify_permission(required_roles=["admin"])),
-    cache_application=Depends(get_cache),
+    cache_application: Any = Depends(get_cache),
 ) -> dict[str, str]:
     """
     Deleting user by ID
@@ -209,7 +209,7 @@ async def update_user_by_id(
     user_id: str,
     user_update: UserUpdate,
     _: dict[str, Any] = Depends(verify_permission(required_roles=["admin"])),
-    cache_application=Depends(get_cache),
+    cache_application: Any = Depends(get_cache),
 ) -> dict[str, str]:
     """
     Updating user by ID

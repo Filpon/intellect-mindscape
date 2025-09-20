@@ -30,11 +30,11 @@ REACT_APP_DOMAIN_NAME = os.getenv("REACT_APP_DOMAIN_NAME")
 KC_HOSTNAME = os.getenv("KC_HOSTNAME")
 KC_HOSTNAME_CONTAINER = os.getenv("KC_HOSTNAME_CONTAINER")
 KC_PORT = os.getenv("KC_PORT")
-KC_REALM_NAME = os.getenv("KC_REALM_NAME")
+KC_REALM_NAME = os.getenv("KC_REALM_NAME", "")
 KC_CLIENT_SECRET_KEY = os.getenv("KC_CLIENT_SECRET_KEY")
 KC_CLIENT_ID = os.getenv("KC_CLIENT_ID")
 KC_REALM_COMMON = os.getenv("KC_REALM_COMMON")
-KC_REALM_COMMON_CLIENT = os.getenv("KC_REALM_COMMON_CLIENT")
+KC_REALM_COMMON_CLIENT = os.getenv("KC_REALM_COMMON_CLIENT", "")
 KC_REALM_COMMON_USER = os.getenv("KC_REALM_COMMON_USER")
 KC_REALM_COMMON_USER_PASSWORD = os.getenv("KC_REALM_COMMON_USER_PASSWORD")
 KEYCLOAK_ADMIN = os.getenv("KEYCLOAK_ADMIN")
@@ -49,7 +49,7 @@ KEYCLOAK_CONTAINER_BASE_URL = f"{KEYCLOAK_CONTAINER_URL}/auth/realms/{KC_REALM_N
 
 REDIRECT_URI = f"{KEYCLOAK_CONTAINER_URL}/callback"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"/api-auth/v1/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api-auth/v1/auth/token")
 
 
 keycloak_openid = KeycloakOpenID(
@@ -120,7 +120,7 @@ async def register(username: str, password: str) -> JSONResponse:
         ) from error
 
     except KeycloakPostError as error:
-        error_message_text_lower = error.error_message.decode("utf-8").lower()
+        error_message_text_lower = error.error_message.lower()
         status_code = status.HTTP_400_BAD_REQUEST
         error_content = ""
 
@@ -174,7 +174,7 @@ async def authenticate_user(username: str, password: str) -> TokenResponseSchema
         return TokenResponseSchema(**token_response)
 
     except KeycloakAuthenticationError as error:
-        error_message_text_lower = error.error_message.decode("utf-8").lower()
+        error_message_text_lower = error.error_message.lower()
         if (
             "user" in error_message_text_lower
             and "credentials" in error_message_text_lower
@@ -208,7 +208,7 @@ async def authenticate_user(username: str, password: str) -> TokenResponseSchema
         ) from error
 
     except KeycloakGetError as error:
-        error_message_text_lower = error.error_message.decode("utf-8").lower()
+        error_message_text_lower = error.error_message.lower()
         if (
             "realm" in error_message_text_lower
             and "not exists" in error_message_text_lower
@@ -327,7 +327,7 @@ async def refresh_token(token: str) -> TokenResponseSchema:
         return TokenResponseSchema(**refresh_token_response)
 
     except KeycloakPostError as error:
-        error_message_text_lower = error.error_message.decode("utf-8").lower()
+        error_message_text_lower = error.error_message.lower()
         if (
             "refresh" in error_message_text_lower
             and "token" in error_message_text_lower
@@ -523,7 +523,7 @@ async def fetch_users() -> dict[str, list[dict[str, Any]]]:
         ) from error
 
     except KeycloakPostError as error:
-        error_message_text_lower = error.error_message.decode("utf-8").lower()
+        error_message_text_lower = error.error_message.lower()
         if (
             "realm" in error_message_text_lower
             and "not exists" in error_message_text_lower
@@ -564,7 +564,7 @@ async def delete_user(user_id: str) -> None:
         ) from error
 
     except KeycloakPostError as error:
-        error_message_text_lower = error.error_message.decode("utf-8").lower()
+        error_message_text_lower = error.error_message.lower()
         if (
             "realm" in error_message_text_lower
             and "not exists" in error_message_text_lower
@@ -606,7 +606,7 @@ async def update_user(user_id: str, user_data: dict[str, Any]) -> None:
         ) from error
 
     except KeycloakPostError as error:
-        error_message_text_lower = error.error_message.decode("utf-8").lower()
+        error_message_text_lower = error.error_message.lower()
         if (
             "realm" in error_message_text_lower
             and "not exists" in error_message_text_lower

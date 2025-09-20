@@ -1,5 +1,5 @@
 import os
-from typing import Awaitable, Callable
+from typing import Any, Awaitable, Callable, Optional
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Request, status
@@ -21,7 +21,7 @@ load_dotenv()  # Environmental variables
 
 logger = configure_logging_handler()
 
-ORIGINS = os.getenv("ORIGINS")
+ORIGINS: Optional[str] = os.getenv("ORIGINS")
 
 # FastAPI app creation
 app = FastAPI(docs_url="/api/v1/docs", openapi_url="/api/v1/openapi")
@@ -34,7 +34,7 @@ if os.getenv("TESTING", "") != "true":
     app.state.limiter = limiter
 
 
-# # Handling RateLimitExceeded exception
+# Handling RateLimitExceeded exception
 @app.exception_handler(RateLimitExceeded)
 async def handle_rate_limit_exceeded(
     request: Request, exception_name: RateLimitExceeded
@@ -55,7 +55,7 @@ async def handle_rate_limit_exceeded(
 app.include_router(auth.router, prefix="/api-auth/v1/auth", tags=["auth"])
 
 # Configure CORS
-origins = ORIGINS.split(sep=",")
+origins = ORIGINS.split(sep=",") if ORIGINS else []
 logger.info("ORIGINS=%s", ORIGINS)
 app.add_middleware(
     CORSMiddleware,
@@ -78,7 +78,7 @@ async def root() -> Response:
 
 
 @app.get("/admin")  # Requires the admin role
-def call_admin(user: str = Depends(verify_permission(required_roles=["admin"]))) -> str:
+def call_admin(user: dict[str, Any] = Depends(verify_permission(required_roles=["admin"]))) -> str:
     """
     Admin role obtaining
 
@@ -106,4 +106,4 @@ if __name__ == "__main__":
 
     import uvicorn
 
-    asyncio.run(uvicorn.run(app, host="0.0.0.0", port=8002))
+    asyncio.run(uvicorn.run(app, host="0.0.0.0", port=8002))  # type: ignore[func-returns-value]

@@ -1,7 +1,8 @@
 from collections import defaultdict
 from time import perf_counter
+from typing import Callable
 
-from fastapi import Request
+from fastapi import status, Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
@@ -15,7 +16,12 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
     if the limit is exceeded
     """
 
-    def __init__(self, app, max_requests: int = 100, time_window: int = 60):
+    def __init__(
+        self,
+        app: Callable,  # type: ignore[type-arg]
+        max_requests: int = 100,
+        time_window: int = 60,
+    ) -> None:
         """
         Initializes the RateLimiterMiddleware
 
@@ -25,11 +31,17 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         :param int time_window: The time window in seconds for counting requests
         """
         super().__init__(app)
-        self.max_requests = max_requests
-        self.time_window = time_window
-        self.requests = defaultdict(list)
+        self.max_requests: int = max_requests
+        self.time_window: int = time_window
+        self.requests: dict[str, list[float]] = defaultdict(
+            list
+        )
 
-    async def dispatch(self, request: Request, call_next) -> JSONResponse:
+    async def dispatch(
+            self,
+            request: Request,
+            call_next: Callable,  # type: ignore[type-arg]
+        ) -> JSONResponse:
         """
         Processes the incoming request and applies rate limiting.
         This method checks the number of requests made
@@ -41,7 +53,7 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         :param call_next: Function to call the next middleware or endpoint
         :return JSONResponse: The response object
         """
-        client_ip = request.client.host
+        client_ip = request.client.host  # type: ignore[union-attr]
         current_time = perf_counter()
 
         # Remove old requests
@@ -51,10 +63,11 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
 
         if len(self.requests[client_ip]) >= self.max_requests:
             return JSONResponse(
-                status_code=429, content={"message": "Too Many Requests"}
+                status_code=status.HTTP_409_CONFLICT,
+                content={"message": "Too Many Requests"},
             )
 
         self.requests[client_ip].append(current_time)
 
         response = await call_next(request)
-        return response
+        return response  # type: ignore[no-any-return]
