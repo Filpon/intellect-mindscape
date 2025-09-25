@@ -1,9 +1,12 @@
 import os
 from typing import Final
 
+from app.configs.logging_handler import configure_logging_handler
 from app.kafka.kafka_consumer import KafkaConsumer
 from app.utils.process_results import ResultsProcessing
 from dotenv import load_dotenv
+
+logger = configure_logging_handler()
 
 load_dotenv()
 
@@ -22,6 +25,7 @@ async def process_game_messages(consumer: KafkaConsumer):
     :param consumer: Kafka consumer instance
     :return dict: Response indicating the status of the processing
     """
+    logger.info("Processing game messages")
     # Consume messages from Kafka
     game_results = await consumer.consume_messages_list()
 

@@ -37,18 +37,19 @@ class KafkaConsumer:
         """
         self.bootstrap_servers = bootstrap_servers
         self.topic = topic
-        self.consumer = None
+        self.consumer = AIOKafkaConsumer(
+            self.topic,
+            bootstrap_servers=self.bootstrap_servers,
+         )
 
     async def start(self):
         """
         Create an active Kafka consumer
         """
         try:
-            self.consumer = AIOKafkaConsumer(
-                self.topic,
-                bootstrap_servers=self.bootstrap_servers,
-            )
-            await self.consumer.start()
+            if self.consumer:
+                await self.consumer.start()
+                logger.info("Kafka consumer instance was started")
             return self.consumer
         except KafkaTimeoutError as error:
             raise HTTPException(
@@ -103,7 +104,6 @@ class KafkaConsumer:
         try:
             if self.consumer:
                 await self.consumer.stop()
-            return self.consumer
         except KafkaError as error:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
