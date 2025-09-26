@@ -67,7 +67,7 @@ services:
     logging: *logging
 
   db:
-    image: postgres:latest
+    image: postgres:${POSTGRES_VERSION}
     ports:
       - "5432:5432"
     healthcheck:
@@ -85,7 +85,7 @@ services:
       - ./db_data:/var/lib/postgresql/data
 
   keycloak-db:
-    image: postgres:latest
+    image: postgres:${POSTGRES_VERSION}
     ports:
       - "5433:5432"
     restart: unless-stopped
@@ -148,7 +148,7 @@ services:
     ports:
       - "6379:6379"  # Expose KeyDB on port 6379
     environment:
-      - KEYDB_PASSWORD=${KEYDB_PASSWORD}  # Set password for KeyDB
+      KEYDB_PASSWORD: ${KEYDB_PASSWORD}  # Set password for KeyDB
     command: ["keydb-server", "--requirepass", "${KEYDB_PASSWORD}"]
     networks:
       - intellect-mindscape
@@ -182,30 +182,30 @@ services:
     ports:
       - ${AUTH_BACKEND_PORT}:${AUTH_BACKEND_PORT}
     environment:
-      - AUTH_BACKEND_PORT=${AUTH_BACKEND_PORT}
-      - DATABASE_URL=${DATABASE_USERS_URL}
-      - KEYCLOAK_URL=http://localhost:${KC_PORT}/auth/realms/${KC_REALM_COMMON}
-      - KC_HOSTNAME=${KC_HOSTNAME}
-      - KC_HOSTNAME_CONTAINER=${KC_HOSTNAME_CONTAINER}
-      - KC_PORT=${KC_PORT}
-      - KC_REALM_NAME=${KC_REALM_NAME}
-      - KC_REALM_COMMON=${KC_REALM_COMMON}
-      - KC_CLIENT_ID=${KC_CLIENT_ID}
-      - KC_CLIENT_SECRET_KEY=${KC_CLIENT_SECRET_KEY}
-      - KC_REALM_COMMON_CLIENT=${KC_REALM_COMMON_CLIENT}
-      - KC_REALM_COMMON_USER=${KC_REALM_COMMON_USER}
-      - KC_REALM_COMMON_USER_PASSWORD=${KC_REALM_COMMON_USER_PASSWORD}
-      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
-      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
-      - KEYDB_PASSWORD=${KEYDB_PASSWORD}
-      - KEYDB_PORT=${KEYDB_PORT}
-      - ORIGINS=${ORIGINS}
-      - KAFKA_HOSTNAME=${KAFKA_HOSTNAME}
-      - KAFKA_PORT=${KAFKA_PORT}
-      - KAFKA_PORT_LISTENER=${KAFKA_PORT_LISTENER}
-      - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
-      - REACT_APP_DOMAIN_NAME=${REACT_APP_DOMAIN_NAME}
-      - TESTING=${TESTING}
+      AUTH_BACKEND_PORT: ${AUTH_BACKEND_PORT}
+      DATABASE_URL: ${DATABASE_USERS_URL}
+      KEYCLOAK_URL: http://localhost:${KC_PORT}/auth/realms/${KC_REALM_COMMON}
+      KC_HOSTNAME: ${KC_HOSTNAME}
+      KC_HOSTNAME_CONTAINER: ${KC_HOSTNAME_CONTAINER}
+      KC_PORT: ${KC_PORT}
+      KC_REALM_NAME: ${KC_REALM_NAME}
+      KC_REALM_COMMON: ${KC_REALM_COMMON}
+      KC_CLIENT_ID: ${KC_CLIENT_ID}
+      KC_CLIENT_SECRET_KEY: ${KC_CLIENT_SECRET_KEY}
+      KC_REALM_COMMON_CLIENT: ${KC_REALM_COMMON_CLIENT}
+      KC_REALM_COMMON_USER: ${KC_REALM_COMMON_USER}
+      KC_REALM_COMMON_USER_PASSWORD: ${KC_REALM_COMMON_USER_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYDB_PASSWORD: ${KEYDB_PASSWORD}
+      KEYDB_PORT: ${KEYDB_PORT}
+      ORIGINS: ${ORIGINS}
+      KAFKA_HOSTNAME: ${KAFKA_HOSTNAME}
+      KAFKA_PORT: ${KAFKA_PORT}
+      KAFKA_PORT_LISTENER: ${KAFKA_PORT_LISTENER}
+      REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL}
+      REACT_APP_DOMAIN_NAME: ${REACT_APP_DOMAIN_NAME}
+      TESTING: ${TESTING}
     networks:
       - intellect-mindscape
     depends_on:
@@ -271,22 +271,22 @@ services:
     ports:
       - ${QUIZ_BACKEND_PORT}:${QUIZ_BACKEND_PORT}
     environment:
-      - AUTH_BACKEND_PORT=${AUTH_BACKEND_PORT}
-      - BACKEND_POSTGRES_USER=${BACKEND_POSTGRES_USER}
-      - BACKEND_POSTGRES_PASSWORD=${BACKEND_POSTGRES_PASSWORD}
-      - BACKEND_POSTGRES_DB=${BACKEND_POSTGRES_DB} 
-      - DATABASE_URL=${DATABASE_URL}
-      - REACT_APP_NODE_MODE=${REACT_APP_NODE_MODE}
-      - ORIGINS=${ORIGINS}
-      - KC_PORT=${KC_PORT}
-      - KEYCLOAK_URL=http://keycloak:8080/auth/realms/${KC_REALM_COMMON}
-      - QUIZ_BACKEND_PORT=${QUIZ_BACKEND_PORT}
-      - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
-      - REACT_APP_BACKEND_GAME_URL=${REACT_APP_BACKEND_GAME_URL}
-      - REACT_APP_DOMAIN_NAME=${REACT_APP_DOMAIN_NAME}
-      - REACT_APP_FRONTEND_GAME_URL=${REACT_APP_FRONTEND_GAME_URL}
-      - KEYDB_PASSWORD=${KEYDB_PASSWORD}  # Set KeyDB password
-      - TESTING=${TESTING}
+      AUTH_BACKEND_PORT: ${AUTH_BACKEND_PORT}
+      BACKEND_POSTGRES_USER: ${BACKEND_POSTGRES_USER}
+      BACKEND_POSTGRES_PASSWORD: ${BACKEND_POSTGRES_PASSWORD}
+      BACKEND_POSTGRES_DB: ${BACKEND_POSTGRES_DB} 
+      DATABASE_URL: ${DATABASE_URL}
+      REACT_APP_NODE_MODE: ${REACT_APP_NODE_MODE}
+      ORIGINS: ${ORIGINS}
+      KC_PORT: ${KC_PORT}
+      KEYCLOAK_URL: http://keycloak:8080/auth/realms/${KC_REALM_COMMON}
+      QUIZ_BACKEND_PORT: ${QUIZ_BACKEND_PORT}
+      REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL}
+      REACT_APP_BACKEND_GAME_URL: ${REACT_APP_BACKEND_GAME_URL}
+      REACT_APP_DOMAIN_NAME: ${REACT_APP_DOMAIN_NAME}
+      REACT_APP_FRONTEND_GAME_URL: ${REACT_APP_FRONTEND_GAME_URL}
+      KEYDB_PASSWORD: ${KEYDB_PASSWORD}  # Set KeyDB password
+      TESTING: ${TESTING}
     networks:
       - intellect-mindscape
     depends_on:
@@ -302,8 +302,8 @@ services:
     ports:
       - "8005:8005"
     environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/auth_db
-      - KEYCLOAK_URL=http://keycloak:8080/auth/realms/${KC_REALM_COMMON}
+      DATABASE_URL: postgresql://user:password@db:5432/auth_db
+      KEYCLOAK_URL: http://keycloak:8080/auth/realms/${KC_REALM_COMMON}
     networks:
       - intellect-mindscape
     depends_on:
