@@ -12,6 +12,14 @@ The project offers the engaging platform where users can answer questions across
 
 ![bg right:50% w:500](./description/pictures/intellect-mindscape-music.png)
 
+## Arithmetic quiz representation
+
+![bg right:50% w:500](./description/pictures/intellect-mindscape-arithmetic.png)
+
+## Trigonometry quiz representation
+
+![bg right:50% w:500](./description/pictures/intellect-mindscape-trigonometry.png)
+
 ## Table of Contents
 
 - [Features](#features)
