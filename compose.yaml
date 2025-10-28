@@ -82,7 +82,7 @@ services:
     networks:
       - intellect-mindscape
     volumes:
-      - ./db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
 
   keycloak-db:
     image: postgres:${POSTGRES_VERSION}
@@ -101,7 +101,7 @@ services:
     networks:
       - intellect-mindscape
     volumes:
-      - ./keycloak_data:/var/lib/postgresql/data
+      - keycloak_data:/var/lib/postgresql/data
 
   kafka:
     image: bitnami/kafka:${KAFKA_VERSION}
