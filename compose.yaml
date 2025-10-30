@@ -357,7 +357,7 @@ services:
     networks:
       - intellect-mindscape
     volumes:
-      - ./qdrant_data:/qdrant/storage
+      - qdrant_data:/qdrant/storage
 
   ollama:
     build:
