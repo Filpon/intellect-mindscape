@@ -438,6 +438,7 @@ volumes:
   auth:
   quiz:
   admin:
+  qdrant_data:
 
 networks:
   intellect-mindscape:
