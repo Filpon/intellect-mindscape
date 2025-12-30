@@ -32,7 +32,8 @@ REFRESH_TOKEN = generate_random_keycloak_token()
 BASE_URL = f"{REACT_APP_BACKEND_URL}{REACT_APP_DOMAIN_NAME}"
 TOKEN_URL = f"{BASE_URL}/api/v1/auth"
 
-os.environ['TESTING'] = "true"
+os.environ["TESTING"] = "true"
+
 
 class MockKeycloakOpenID:
     """
@@ -244,7 +245,7 @@ async def backend_container_quiz_runner(docker_ip, docker_services):
         KC_PORT_VALUE = int(KC_PORT)
     except ValueError as excp:
         raise ValueError("Converting value to integer error") from excp
-    
+
     try:
         QUIZ_BACKEND_PORT_VALUE = int(QUIZ_BACKEND_PORT)
     except ValueError as excp:
@@ -254,7 +255,9 @@ async def backend_container_quiz_runner(docker_ip, docker_services):
     url_auth_backend = f"http://{docker_ip}:{port_backend}/check-auth"
     port_keycloak = docker_services.port_for("keycloak", KC_PORT_VALUE)
     url_keycloak = f"http://{docker_ip}:{port_keycloak}"
-    port_quiz_backend = docker_services.port_for("quiz-backend-api", QUIZ_BACKEND_PORT_VALUE)
+    port_quiz_backend = docker_services.port_for(
+        "quiz-backend-api", QUIZ_BACKEND_PORT_VALUE
+    )
     url_quiz_backend = f"http://{docker_ip}:{port_quiz_backend}/check-game"
     docker_services.wait_until_responsive(
         timeout=410, pause=3, check=lambda: is_responsive(url=url_auth_backend)
@@ -267,13 +270,12 @@ async def backend_container_quiz_runner(docker_ip, docker_services):
     )
     url_auth_backend = url_auth_backend.replace("/check-auth", "")
     url_quiz_backend = url_quiz_backend.replace("/check-game", "")
-    async with AsyncClient(base_url=url_auth_backend) as async_auth_client, \
-           AsyncClient(base_url=url_quiz_backend) as async_quiz_client:
+    async with (
+        AsyncClient(base_url=url_auth_backend) as async_auth_client,
+        AsyncClient(base_url=url_quiz_backend) as async_quiz_client,
+    ):
         time.sleep(3)
-        yield {
-            "auth_backend": async_auth_client,
-            "quiz_backend": async_quiz_client
-        }
+        yield {"auth_backend": async_auth_client, "quiz_backend": async_quiz_client}
 
 
 @pytest.fixture(scope="function")
