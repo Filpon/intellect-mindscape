@@ -26,7 +26,7 @@ ORIGINS: Optional[str] = os.getenv("ORIGINS")
 # FastAPI app creation
 app = FastAPI(docs_url="/api/v1/docs", openapi_url="/api/v1/openapi")
 app.add_middleware(middleware_class=LoggingMiddleware)
-logger.info("TESTING=%s", os.getenv('TESTING'))
+logger.info("TESTING=%s", os.getenv("TESTING"))
 if os.getenv("TESTING", "") != "true":
     logger.info("Include SlowAPIASGIMiddleware")
     limiter = Limiter(key_func=get_remote_address, application_limits=["9/5seconds"])
@@ -78,7 +78,9 @@ async def root() -> Response:
 
 
 @app.get("/admin")  # Requires the admin role
-def call_admin(user: dict[str, Any] = Depends(verify_permission(required_roles=["admin"]))) -> str:
+def call_admin(
+    user: dict[str, Any] = Depends(verify_permission(required_roles=["admin"])),
+) -> str:
     """
     Admin role obtaining
 

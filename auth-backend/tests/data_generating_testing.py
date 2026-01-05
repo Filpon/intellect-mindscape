@@ -22,7 +22,7 @@ def generate_test_credentials() -> tuple[str, str]:
         randint(1000, 9999)
     )  # Simple password generation
 
-    email_username = re.sub(r'[^a-zA-Z0-9]', '', username)
+    email_username = re.sub(r"[^a-zA-Z0-9]", "", username)
 
     return email_username, password
 

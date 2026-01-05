@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Token(BaseModel):
     """
     Representing access token and refresh token

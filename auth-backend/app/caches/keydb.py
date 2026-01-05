@@ -36,9 +36,7 @@ async def cache_span(_: FastAPI) -> AsyncIterator[Backend]:
     after initializing the cache. The cache availability within
     the context block
     """
-    keydb = aioredis.from_url(
-        f"redis://:{KEYDB_PASSWORD}@keydb:{KEYDB_PORT}"
-    )  # type: ignore[no-untyped-call]
+    keydb = aioredis.from_url(f"redis://:{KEYDB_PASSWORD}@keydb:{KEYDB_PORT}")  # type: ignore[no-untyped-call]
     FastAPICache.init(backend=RedisBackend(keydb), prefix="fastapi-cache")
     yield FastAPICache.get_backend()
 
