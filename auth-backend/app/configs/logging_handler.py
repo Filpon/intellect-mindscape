@@ -32,6 +32,10 @@ def configure_logging_handler(
 
     :return Logger logger: Configured logger instance
     """
+    # The creation of the logs directory if it does not exist
+    log_dir = log_file.parent
+    log_dir.mkdir(parents=True, exist_ok=True)
+
     # Creation or get the logger
     logger = getLogger(__name__)
     logger.setLevel(level)
