@@ -38,7 +38,7 @@ class KafkaProducer:
 
         self.bootstrap_servers = bootstrap_servers
         self.topic = topic
-        self.producer = None
+        self.producer: AIOKafkaProducer | None = None
 
     async def start(self):
         """

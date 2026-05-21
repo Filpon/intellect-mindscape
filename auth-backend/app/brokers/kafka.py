@@ -3,11 +3,13 @@ import asyncio
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from aiokafka.errors import (
     ConsumerStoppedError,
+    KafkaConnectionError,
     KafkaError,
     KafkaTimeoutError,
     NoBrokersAvailable,
     UnknownTopicOrPartitionError,
 )
+from fastapi import HTTPException, status
 
 from app.configs.logging_handler import configure_logging_handler
 
@@ -28,9 +30,7 @@ class KafkaProducer:
         """
         self.bootstrap_servers: str = bootstrap_servers
         self.topic: str = topic
-        self.producer: AIOKafkaProducer | None = AIOKafkaProducer(
-            bootstrap_servers=self.bootstrap_servers
-        )
+        self.producer: None | AIOKafkaProducer = None
 
     async def start(self) -> None:
         """
@@ -38,9 +38,24 @@ class KafkaProducer:
 
         Initializes the AIOKafkaProducer and connects to the Kafka server
         """
-
-        if self.producer is not None:
+        try:
+            if self.producer is None:
+                self.producer = AIOKafkaProducer(
+                    bootstrap_servers=self.bootstrap_servers
+                )
             await self.producer.start()
+        except KafkaConnectionError as error:
+            logger.exception("Unable to connect to Kafka server")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Unable to connect to Kafka server",
+            ) from error
+        except Exception as exception:
+            logger.exception("Failed to start Kafka, because of %s", exception)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to start Kafka, because of {str(exception)}",
+            ) from exception
 
     async def produce_message(self, key: str, value: str) -> None:
         """
@@ -52,7 +67,8 @@ class KafkaProducer:
         if self.producer is None:
             logger.error("Producer is not started")
             return None
-
+        if isinstance(value, str):
+            value = value.encode("utf-8")
         try:
             await self.producer.send_and_wait(
                 self.topic, key=key.encode(), value=value.encode()
@@ -67,7 +83,7 @@ class KafkaProducer:
         except Exception as excp:  # pylint: disable=W0718
             logger.error("Message delivery failed: %s", excp)
 
-    async def close(self) -> None:
+    async def stop(self) -> None:
         """
         Close the producer
         """
@@ -91,19 +107,33 @@ class KafkaConsumer:
         self.bootstrap_servers: str = bootstrap_servers
         self.topic: str = topic
         self.group_id: str = group_id
-        self.consumer: AIOKafkaConsumer | None = AIOKafkaConsumer(
-            self.topic,
-            bootstrap_servers=self.bootstrap_servers,
-            group_id=self.group_id,
-            auto_offset_reset="earliest",
-        )
+        self.consumer: AIOKafkaConsumer | None = None
 
     async def start(self) -> None:
         """
         Start Kafka consumer
         """
-        if self.consumer is not None:
+        try:
+            if self.consumer is not None:
+                self.consumer = AIOKafkaConsumer(
+                    self.topic,
+                    bootstrap_servers=self.bootstrap_servers,
+                    group_id=self.group_id,
+                    auto_offset_reset="earliest",
+                )
             await self.consumer.start()
+        except KafkaConnectionError as error:
+            logger.exception("Unable to connect to Kafka server")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Unable to connect to Kafka server",
+            ) from error
+        except Exception as exception:
+            logger.exception("Failed to start Kafka, because of %s", exception)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to start Kafka, because of {str(exception)}",
+            ) from exception
 
     async def consume(self) -> str | None:
         """
@@ -130,7 +160,7 @@ class KafkaConsumer:
 
         return None
 
-    async def close(self) -> None:
+    async def stop(self) -> None:
         """
         Consumer closing
 
@@ -160,8 +190,8 @@ async def main() -> None:
     except Exception as excp:  # pylint: disable=W0718
         logger.error("Error during Kafka operations: %s", excp)
     finally:
-        await producer.close()
-        await consumer.close()
+        await producer.stop()
+        await consumer.stop()
 
 
 if __name__ == "__main__":
