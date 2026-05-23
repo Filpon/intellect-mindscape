@@ -39,7 +39,7 @@ class ResultsProcessing:
     """
 
     async_qdrant_client = AsyncQdrantClient(
-        url=f"http://{QDRANT_HOSTNAME}{REACT_APP_DOMAIN_NAME}:{QDRANT_PORT}"
+        url=f"{QDRANT_HOSTNAME}:{QDRANT_PORT}"
     )
     model = SentenceTransformer(SENTENCE_MODEL_IN_USE)
 

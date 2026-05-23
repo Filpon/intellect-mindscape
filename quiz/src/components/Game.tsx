@@ -77,7 +77,7 @@ const Game: React.FC<GameProps> = ({
     // Initialize WebSocket connection for arithmetic mode
     if (!ws && !isGameOver) {
       const websocket = new WebSocket(
-        `ws://${process.env.REACT_APP_BACKEND_DOMEN_CHAT}${process.env.REACT_APP_DOMAIN_NAME}:8005/ws`,
+        `ws://${process.env.REACT_APP_BACKEND_DOMEN_CHAT}:8005/ws`,
       );
       setWs(websocket);
     }
