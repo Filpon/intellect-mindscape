@@ -28,7 +28,7 @@ async def process_game_messages(consumer: KafkaConsumer):
     logger.info("Processing game messages")
     # Consume messages from Kafka
     game_results = await consumer.consume_messages_list()
-
+    logger.info(game_results)
     # Organize the results
     organized_results = await ResultsProcessing.order_game_results(
         game_results=game_results
