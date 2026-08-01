@@ -37,7 +37,6 @@ class ResultsProcessing:
     The class interacts with Qdrant for storing and retrieving game data,
     processes game results, and generates studying recommendations based on user performance
     """
-
     async_qdrant_client = AsyncQdrantClient(
         url=f"{QDRANT_HOSTNAME}:{QDRANT_PORT}"
     )
@@ -192,6 +191,7 @@ class ResultsProcessing:
         ]
         df = pd.DataFrame(game_data_restructured)
         # Including user_sub_id to DataFrame
+        logger.info(df)
         df["user_sub_id"] = df["id"].map(user_sub_ids_dict)
         statistics = (
             df.groupby(["user_sub_id", "mode"])
