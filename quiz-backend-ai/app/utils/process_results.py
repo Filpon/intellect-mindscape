@@ -37,9 +37,8 @@ class ResultsProcessing:
     The class interacts with Qdrant for storing and retrieving game data,
     processes game results, and generates studying recommendations based on user performance
     """
-    async_qdrant_client = AsyncQdrantClient(
-        url=f"{QDRANT_HOSTNAME}:{QDRANT_PORT}"
-    )
+
+    async_qdrant_client = AsyncQdrantClient(url=f"{QDRANT_HOSTNAME}:{QDRANT_PORT}")
     model = SentenceTransformer(SENTENCE_MODEL_IN_USE)
 
     @classmethod
@@ -225,8 +224,8 @@ class ResultsProcessing:
             Question: {question}
             Context: {context}
             """)
-        question = """Please create legal appropriate learning recomendations in one-two sentences length
-        basing on user context data theme - this is mode in obtaining context data,
+        question = """Please create legal appropriate learning recomendations in one-two sentences
+        length basing on user context data theme - this is mode in obtaining context data,
         context data questions and context data incorrect answers."""
         for user_sub_id in statistics["user_sub_id"].unique():
             # LLM generation recommendation
