@@ -4,7 +4,13 @@ import App from './App.tsx';
 import './styles/main.scss';
 import * as serviceWorker from './serviceWorker.ts';
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Root element was not found');
+}
+
+const root = ReactDOM.createRoot(rootElement);
+
 root.render(
   <React.StrictMode>
     <App />
