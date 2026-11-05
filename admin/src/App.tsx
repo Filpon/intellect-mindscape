@@ -48,7 +48,8 @@ const App: React.FC = () => {
     if (process.env.REACT_APP_NODE_MODE === 'development') {
       console.log('Tokens are not refeshed in development mode');
     } else {
-      const cleanup = periodicRefreshAuthCheck(30);
+      const seconds = Number(process.env.REACT_APP_REALM_ACCESS_TOKEN_EXPIRES_IN);
+      const cleanup = periodicRefreshAuthCheck(seconds - 1);
       return cleanup; // Cleanup function to clear the interval on unmount
     }
   }, []);

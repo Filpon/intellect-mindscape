@@ -2,39 +2,29 @@
 // eslint-disable-next-line
 import { AxiosResponse } from 'axios';
 
+import Cookies from 'js-cookie';
+
 import apiRequest from './AxiosRequest.ts';
 
 export const clearTokens = () => {
-  localStorage.removeItem('access_token');
-  sessionStorage.removeItem('access_token');
-  localStorage.removeItem('access_expires');
-  sessionStorage.removeItem('access_expires');
-  localStorage.removeItem('refresh_token');
-  sessionStorage.removeItem('refresh_token');
-  localStorage.removeItem('refresh_expires');
-  sessionStorage.removeItem('refresh_expires');
+  Cookies.remove('access_token', { path: '/' });
+  Cookies.remove('access_expires', { path: '/' });
+  Cookies.remove('refresh_token', { path: '/' });
+  Cookies.remove('refresh_expires', { path: '/' });
 };
 
 const storeTokens = (data: any) => {
-  localStorage.setItem('access_token', data.access_token);
-  sessionStorage.setItem('access_token', data.access_token);
-  localStorage.setItem('access_expires', Date.now() / 1000 + data.expires_in);
-  sessionStorage.setItem('access_expires', Date.now() / 1000 + data.expires_in);
-  localStorage.setItem('refresh_token', data.refresh_token);
-  sessionStorage.setItem('refresh_token', data.refresh_token);
-  localStorage.setItem(
-    'refresh_expires',
-    Date.now() / 1000 + data.refresh_expires_in,
-  );
-  sessionStorage.setItem(
-    'refresh_expires',
-    Date.now() / 1000 + data.refresh_expires_in,
-  );
+  Cookies.set('access_token', data.access_token, { path: '/', maxAge: data.expires_in });
+  const accessExpires = new Date(Date.now() / 1000 + data.expires_in * 1000).toUTCString();
+  Cookies.set('access_expires', accessExpires, { path: '/', maxAge: data.expires_in });
+  Cookies.set('refresh_token', data.refresh_token, { path: '/', maxAge: data.refresh_expires_in });
+  const refreshExpires = new Date(Date.now() / 1000 + data.refresh_expires_in * 1000).toUTCString();
+  Cookies.set('refresh_expires', refreshExpires, { path: '/', maxAge: data.refresh_expires_in });
 };
 
-export const checkRefreshToken = async () => {
-  const refreshExpires = localStorage.getItem('refresh_expires');
-  const refreshToken = localStorage.getItem('refresh_token');
+export const checkTokens = async () => {
+  const refreshExpires = Cookies.get('refresh_expires');
+  const refreshToken = Cookies.get('refresh_token');
   const now = Date.now() / 1000;
 
   if (refreshToken && refreshExpires) {
@@ -66,14 +56,8 @@ export const checkRefreshToken = async () => {
 };
 
 export const checkAccessToken = async () => {
-  const accessToken: string | null =
-    localStorage.getItem('access_token') ||
-    sessionStorage.getItem('access_token') ||
-    null;
-  const accessExpires: string | null =
-    localStorage.getItem('access_expires') ||
-    sessionStorage.getItem('access_expires') ||
-    null;
+  const accessToken = Cookies.get('access_token');
+  const accessExpires = Cookies.get('access_expires');
   const now = Date.now() / 1000;
 
   if (accessToken && accessExpires) {

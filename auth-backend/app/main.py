@@ -29,7 +29,7 @@ app.add_middleware(middleware_class=LoggingMiddleware)
 logger.info("TESTING=%s", os.getenv("TESTING"))
 if os.getenv("TESTING", "") != "true":
     logger.info("Include SlowAPIASGIMiddleware")
-    limiter = Limiter(key_func=get_remote_address, application_limits=["9/5seconds"])
+    limiter = Limiter(key_func=get_remote_address, application_limits=["25/5seconds"])
     app.add_middleware(middleware_class=SlowAPIASGIMiddleware)
     app.state.limiter = limiter
 

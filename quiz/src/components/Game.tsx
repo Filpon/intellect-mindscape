@@ -12,6 +12,7 @@ import MathQuestion from './arithmetic/MathQuestion.tsx';
 import TrigonometryQuestion from './trigonometry/TrigonometryQuestion.tsx'; // Import the new component
 import '../styles/Game.scss';
 import Timer from './Timer.tsx';
+import { checkTokens } from '../services/Tokens.ts';
 
 type SupportedLanguage = 'en' | 'ru';
 
@@ -40,9 +41,7 @@ const Game: React.FC<GameProps> = ({
     correctAnswer: string;
   }>({ question: '', correctAnswer: '' });
   const [score, setScore] = useState({ correct: 0, incorrect: 0 });
-  const [mode, setMode] = useState<
-    'music' | 'arithmetic' | 'trigonometry' | null
-  >(null); // Default mode
+  const [mode, setMode] = useState<'music' | 'arithmetic' | 'trigonometry' | null>(null); // Default mode
   const [selectedSheet, setSelectedSheet] = useState<'bass' | 'treble' | null>(
     null,
   ); // State for selected sheet
@@ -279,7 +278,11 @@ const Game: React.FC<GameProps> = ({
           <p>
             {translations.incorrect_answers}: {score.incorrect}
           </p>
-          <button onClick={() => (window.location.href = '/game')}>
+          <button onClick={async () => {
+            await checkTokens();
+            window.location.href = "/game";
+          }
+          }>
             {translations.home}
           </button>
         </div>

@@ -2,7 +2,7 @@ import json
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse, Response
 
 from app.caches.keydb import get_cache
 from app.configs.logging_handler import configure_logging_handler
@@ -66,16 +66,38 @@ async def register_user(
 @router.post("/token", response_model=TokenResponseSchema)
 async def login(
     form_data: Annotated[CustomOAuth2PasswordRequestForm, Form()],
+    response: Response
 ) -> TokenResponseSchema:
     """
     Token for user auth
 
     :param CustomOAuth2PasswordRequestForm form_data: Authentication request form
+    :param Response response: FastAPI response object to set cookies
     :returns dict token: Token obtaining
     """
     authenticate_user_result = await authenticate_user(
         username=form_data.username, password=form_data.password
     )
+
+    # Set secure cookies with tokens
+    response.set_cookie(
+        key="access_token",
+        value=authenticate_user_result.access_token,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+        max_age=authenticate_user_result.expires_in
+    )
+
+    response.set_cookie(
+        key="refresh_token",
+        value=authenticate_user_result.refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+        max_age=authenticate_user_result.refresh_expires_in
+    )
+
     logger.info("User '%s' token obtaining was successful", form_data.username)
     return authenticate_user_result
 
@@ -115,15 +137,38 @@ async def introspect(token: str = Depends(oauth2_scheme)) -> dict[str, Any]:
 
 
 @router.post("/refresh", response_model=TokenResponseSchema)
-async def refresh(token: Token) -> TokenResponseSchema:
+async def refresh(
+    token: Token,
+    response: Response
+) -> TokenResponseSchema:
     """
     Refreshing auth token
 
     :param Token token: Token for refreshing
-
+    :param Response response: FastAPI response object to set cookies
     :returns dict new_token: New token after refreshing
     """
     refresh_token_result = await refresh_token(token=token.token)
+
+    # Set secure cookies with refreshed tokens
+    response.set_cookie(
+        key="access_token",
+        value=refresh_token_result.access_token,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+        max_age=refresh_token_result.expires_in
+    )
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token_result.refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+        max_age=refresh_token_result.refresh_expires_in
+    )
+
     logger.info("Token refresh was successful")
     return refresh_token_result
 
@@ -232,12 +277,20 @@ async def update_user_by_id(
 
 
 @router.post("/logout")
-async def logout_user(token: Token) -> dict[str, Any]:
+async def logout_user(
+    token: Token,
+    response: Response
+) -> dict[str, Any]:
     """
     Representing logout
 
     :param str token: Token refreshing from Keycloak
     """
     logout_result = await logout(token=token.token)
+
+    # Clear cookies on logout
+    response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")
+
     logger.info("Logout was successful")
     return logout_result

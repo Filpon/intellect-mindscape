@@ -1,9 +1,10 @@
 import { apiRequestGame } from './AxiosRequest.ts';
 import { AxiosResponse } from 'axios';
+import Cookies from 'js-cookie';
 
 export const fetchGames = async () => {
-  const accessToken: string | null = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-  const refreshToken: string | null = localStorage.getItem('refresh_token') ||  sessionStorage.getItem('refresh_token');
+  const accessToken = Cookies.get('access_token');
+  const refreshToken = Cookies.get('refresh_token');
 
   if (accessToken && refreshToken) {
     try {

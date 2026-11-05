@@ -50,7 +50,7 @@ async def lifespan_handler(application: FastAPI) -> AsyncGenerator[None, None]:
 
 
 app = FastAPI(
-    docs_url="/api/v1/docs", openapi_url="/api/v1/openapi", lifespan=lifespan_handler
+    docs_url="/api-ai/v1/docs", openapi_url="/api-ai/v1/openapi", lifespan=lifespan_handler
 )
 app.include_router(
     study_recommendations.router, prefix="/api/v1/kafka", tags=["recommendations"]

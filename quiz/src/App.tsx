@@ -7,6 +7,7 @@ import { Spinner } from './components/Spinner.tsx';
 import Statistics from './components/statistics/Statistics.tsx';
 import { apiRequest } from './services/AxiosRequest.ts';
 import {
+  checkTokens,
   introspectToken,
   periodicRefreshAuthCheck,
   logout,
@@ -99,7 +100,8 @@ export const App: React.FC = () => {
     if (process.env.REACT_APP_NODE_MODE === 'development') {
       console.log('Tokens are not refeshed in development mode');
     } else {
-      const cleanup = periodicRefreshAuthCheck(30);
+      const seconds = Number(process.env.REACT_APP_REALM_ACCESS_TOKEN_EXPIRES_IN);
+      const cleanup = periodicRefreshAuthCheck(seconds - 1);
       return cleanup; // Cleanup function to clear the interval on unmount
     }
   }, []); // Run this effect only once when the component mounts
@@ -137,9 +139,11 @@ export const App: React.FC = () => {
       console.error('Error starting new game:', error);
       alert('Failed to start a new game.');
     }
+
+    await checkTokens();
   };
 
-  const confirmStartNewGame = async () => {
+  const  confirmStartNewGame = async () => {
     const confirmStart = window.confirm(translations.confirm_game_start);
     if (confirmStart) {
       const gameIdValue = await handleStartNewGame();

@@ -2,45 +2,29 @@
 // eslint-disable-next-line
 import { AxiosResponse } from 'axios';
 
+import Cookies from 'js-cookie';
+
 import { apiRequestAuth } from './AxiosRequest.ts';
 
 export const clearTokens = () => {
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('access_expires');
-  localStorage.removeItem('refresh_token');
-  localStorage.removeItem('refresh_expires');
-  sessionStorage.removeItem('access_token');
-  sessionStorage.removeItem('access_expires');
-  sessionStorage.removeItem('refresh_token');
-  sessionStorage.removeItem('refresh_expires');
+  Cookies.remove('access_token', { path: '/' });
+  Cookies.remove('access_expires', { path: '/' });
+  Cookies.remove('refresh_token', { path: '/' });
+  Cookies.remove('refresh_expires', { path: '/' });
 };
 
 const storeTokens = (data: any) => {
-  localStorage.setItem('access_token', data.access_token);
-  localStorage.setItem('access_expires', Date.now() / 1000 + data.expires_in);
-  localStorage.setItem('refresh_token', data.refresh_token);
-  localStorage.setItem(
-    'refresh_expires',
-    Date.now() / 1000 + data.refresh_expires_in,
-  );
-  sessionStorage.setItem('access_token', data.access_token);
-  sessionStorage.setItem('access_expires', Date.now() / 1000 + data.expires_in);
-  sessionStorage.setItem('refresh_token', data.refresh_token);
-  sessionStorage.setItem(
-    'refresh_expires',
-    Date.now() / 1000 + data.refresh_expires_in,
-  );
+  Cookies.set('access_token', data.access_token, { path: '/', maxAge: data.expires_in });
+  const accessExpires = new Date(Date.now() / 1000 + data.expires_in * 1000).toUTCString();
+  Cookies.set('access_expires', accessExpires, { path: '/', maxAge: data.expires_in });
+  Cookies.set('refresh_token', data.refresh_token, { path: '/', maxAge: data.refresh_expires_in });
+  const refreshExpires = new Date(Date.now() / 1000 + data.refresh_expires_in * 1000).toUTCString();
+  Cookies.set('refresh_expires', refreshExpires, { path: '/', maxAge: data.refresh_expires_in });
 };
 
 export const checkRefreshToken = async () => {
-  const refreshExpires: string | null =
-    sessionStorage.getItem('refresh_expires') ||
-    localStorage.getItem('refresh_expires') ||
-    null;
-  const refreshToken: string | null =
-    sessionStorage.getItem('refresh_token') ||
-    localStorage.getItem('refresh_token') ||
-    null;
+  const refreshExpires = Cookies.get('refresh_expires');
+  const refreshToken = Cookies.get('refresh_token');
   const now = Date.now() / 1000;
 
   if (refreshToken && refreshExpires) {
@@ -66,13 +50,10 @@ export const checkRefreshToken = async () => {
 };
 
 export const isAuthenticated = () => {
-  return (
-    localStorage.getItem('access_token') !== null ||
-    sessionStorage.getItem('access_token') !== null
-  );
+  return Cookies.get('access_token') !== undefined;
 };
 
-export const periodicRefreshAuthCheck = (seconds = 120) => {
+export const periodicRefreshAuthCheck = (seconds = 60) => {
   const interval = setInterval(async () => {
     if (isAuthenticated()) {
       try {
@@ -98,10 +79,7 @@ export const introspectToken = async () => {
 };
 
 export const logout = async () => {
-  const refreshToken =
-    localStorage.getItem('refresh_token') ||
-    sessionStorage.getItem('refresh_token') ||
-    '';
+  const refreshToken = Cookies.get('refresh_token');
   try {
     await apiRequestAuth.post(
       '/api-auth/v1/auth/logout',

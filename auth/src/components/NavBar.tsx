@@ -37,18 +37,6 @@ export const NavBar: FC = () => {
       {authenticated ? (
         <>
           <Nav>
-            <Nav.Item>
-              <Nav.Link as={Link} to="/fetch-events">
-                Events
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link as={Link} to="/create-event">
-                Create Event
-              </Nav.Link>
-            </Nav.Item>
-          </Nav>
-          <Nav>
             <Button
               variant="outline-primary"
               className="ml-auto"

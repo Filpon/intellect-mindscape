@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Navbar.scss';
+import { checkTokens } from '../services/Tokens.ts';
 
 interface Translations {
   [key: string]: string; // Dynamic keys for translations
@@ -43,7 +44,11 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {(isGameStarted || isGameStatistics || isGameRemarks) && (
           <li className="navbar-item">
-            <Link to="/game" onClick={() => (window.location.href = '/game')}>
+            <Link to="/game" onClick={async () => {
+              await checkTokens();
+              window.location.href = "/game";
+            }
+            }>
               {translations.home}
             </Link>
           </li>
@@ -68,7 +73,11 @@ const Navbar: React.FC<NavbarProps> = ({
         </li>
         {isAdmin && ( // Conditionally render the admin button
           <li className="navbar-item">
-            <Link to="/admin" onClick={() => (window.location.href = '/admin')}>
+            <Link to="/admin" onClick={async () => {
+              await checkTokens();
+              window.location.href = "/admin";
+            }
+            }>
               {translations.admin}
             </Link>
           </li>

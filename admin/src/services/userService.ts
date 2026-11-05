@@ -1,10 +1,10 @@
 import { AxiosResponse } from 'axios';
-
+import Cookies from 'js-cookie';
 import { apiRequestAuth, apiRequestAuthNonToken } from './AxiosRequest.ts';
 
 export const fetchUsers = async () => {
-  const accessToken: string | null = localStorage.getItem('access_token');
-  const refreshToken: string | null = localStorage.getItem('refresh_token');
+  const accessToken = Cookies.get('access_token');
+  const refreshToken = Cookies.get('refresh_token');
 
   if (accessToken && refreshToken) {
     try {
@@ -29,8 +29,8 @@ export const fetchUsers = async () => {
 };
 
 export const deleteUser = async (userId: string) => {
-  const accessToken: string | null = localStorage.getItem('access_token');
-  const refreshToken: string | null = localStorage.getItem('refresh_token');
+  const accessToken = Cookies.get('access_token');
+  const refreshToken = Cookies.get('refresh_token');
 
   if (accessToken && refreshToken) {
     try {
@@ -96,21 +96,14 @@ export const updateUserById = async (
 };
 
 export const clearTokens = () => {
-  localStorage.removeItem('access_token');
-  sessionStorage.removeItem('access_token');
-  localStorage.removeItem('access_expires');
-  sessionStorage.removeItem('access_expires');
-  localStorage.removeItem('refresh_token');
-  sessionStorage.removeItem('refresh_token');
-  localStorage.removeItem('refresh_expires');
-  sessionStorage.removeItem('refresh_expires');
+  Cookies.remove('access_token', { path: '/' });
+  Cookies.remove('access_expires', { path: '/' });
+  Cookies.remove('refresh_token', { path: '/' });
+  Cookies.remove('refresh_expires', { path: '/' });
 };
 
 export const logout = async () => {
-  const refreshToken =
-    localStorage.getItem('refresh_token') ||
-    sessionStorage.getItem('refresh_token') ||
-    null;
+  const refreshToken = Cookies.get('refresh_token');
   clearTokens();
 
   await apiRequestAuth.post(

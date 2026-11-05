@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import Cookies from 'js-cookie';
+
 const apiRequest = axios.create({
   baseURL: `${process.env.REACT_APP_BACKEND_GAME_URL}${process.env.REACT_APP_DOMAIN_NAME}:8004`,
   timeout: 5000,
@@ -18,7 +20,7 @@ const apiRequestAuth = axios.create({
 
 apiRequest.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = Cookies.get('access_token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -32,10 +34,7 @@ apiRequest.interceptors.request.use(
 // Interceptor to add the Authorization token to requests
 apiRequestAuth.interceptors.request.use(
   (config) => {
-    const token =
-      localStorage.getItem('access_token') ||
-      sessionStorage.getItem('access_token') ||
-      null;
+    const token = Cookies.get('access_token');;
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
