@@ -1,9 +1,11 @@
-import React from 'react';
 import '../styles/Avatar.scss';
 import './reactions/PositiveSmile.tsx';
-import PositiveSmile from './reactions/PositiveSmile.tsx';
+
+import React from 'react';
+
 import NegativeSmile from './reactions/NegativeSmile.tsx';
 import NeutralSmile from './reactions/NeutralSmile.tsx';
+import PositiveSmile from './reactions/PositiveSmile.tsx';
 
 interface AvatarProps {
   emotion: 'normal' | 'stressed' | 'rejoices';

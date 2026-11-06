@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import {
-  fetchUsers,
-  deleteUser,
-} from '../services/userService.ts';
-import UserForm from './UserForm.tsx';
-import Spinner from './Spinner.tsx';
 import '../styles/UserList.scss';
+
+import React, { useEffect, useState } from 'react';
+
+import { deleteUser, fetchUsers } from '../services/userService.ts';
+import { handleNavigate } from '../utils/commonUtils.ts';
 import { ModalWindow } from './common/ModalWindow.tsx';
 import { ModalWindowConfirm } from './common/ModalWindowConfirm.tsx';
 import NavBar from './NavBar.tsx';
-import { handleNavigate } from '../utils/commonUtils.ts';
+import Spinner from './Spinner.tsx';
+import UserForm from './UserForm.tsx';
 
 interface UserListProps {
   currentUserId: string | null;
@@ -67,7 +66,9 @@ const UserList: React.FC<UserListProps> = ({ currentUserId }) => {
         setMessage('User was deleted successfully.');
         setShowModal(true);
       } catch (error) {
-        setMessage('Failed to delete user. Please try again.');
+        setMessage(
+          `Failed to delete user because of ${error}. Please try again.`,
+        );
       } finally {
         setShowModalConfirm(false);
       }
@@ -91,7 +92,10 @@ const UserList: React.FC<UserListProps> = ({ currentUserId }) => {
             users.map((user) => (
               <li key={user.id}>
                 {user.username} - {user.email}
-                <button onClick={() => handleDeleteConfirmation(user.id)} disabled={user.id === currentUserId}>
+                <button
+                  onClick={() => handleDeleteConfirmation(user.id)}
+                  disabled={user.id === currentUserId}
+                >
                   Delete
                 </button>
                 <button onClick={() => setSelectedUser(user)}>Edit</button>

@@ -1,6 +1,7 @@
-import { apiRequestGame } from './AxiosRequest.ts';
 import { AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
+
+import { apiRequestGame } from './AxiosRequest.ts';
 
 export const fetchGames = async () => {
   const accessToken = Cookies.get('access_token');

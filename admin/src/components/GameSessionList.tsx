@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { fetchGames } from '../services/gameService.ts';
-import Spinner from './Spinner.tsx';
 import '../styles/GameSessionList.scss';
-import NavBar from './NavBar.tsx';
+
+import React, { useEffect, useState } from 'react';
+
+import { fetchGames } from '../services/gameService.ts';
 import { handleNavigate } from '../utils/commonUtils.ts';
+import NavBar from './NavBar.tsx';
+import Spinner from './Spinner.tsx';
 
 interface Game {
   id: number;

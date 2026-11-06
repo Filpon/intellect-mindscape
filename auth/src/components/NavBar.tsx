@@ -1,12 +1,11 @@
 import React, { FC, useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { Button, Nav, Navbar } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
-import { logout } from '../utils/Auth.ts';
 import { AuthContextApp } from '../App.tsx';
-
 import { ReactComponent as HomePicture } from '../pictures/Home.svg';
+import { logout } from '../utils/Auth.ts';
 
 /**
  * Functional component that represents project navbar

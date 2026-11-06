@@ -1,5 +1,6 @@
 // TrigonometryQuestion.tsx
 import React from 'react';
+
 import { evaluateTrigonometricFunction } from '../../utils/commonUtils.ts';
 
 interface TrigonometryQuestionData {

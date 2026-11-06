@@ -1,19 +1,19 @@
 /* eslint-disable max-lines */
+import 'react-toastify/dist/ReactToastify.css';
+import '../styles/Login.scss';
+
+import { AxiosError } from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card, Container, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { AxiosError } from 'axios';
 
-import { handleRegister } from '../utils/Tokens.ts';
-import '../styles/Login.scss';
-import { ErrorModal } from './ErrorModal.tsx';
-
-// eslint-disable-next-line
-import { ReactComponent as VisibleInput } from '../pictures/VisibleInput.svg'; // @ts-ignore
 // eslint-disable-next-line
 import { ReactComponent as InvisibleInput } from '../pictures/InvisibleInput.svg'; // @ts-ignore
+// eslint-disable-next-line
+import { ReactComponent as VisibleInput } from '../pictures/VisibleInput.svg'; // @ts-ignore
+import { handleRegister } from '../utils/Tokens.ts';
+import { ErrorModal } from './ErrorModal.tsx';
 
 /**
  * Functional component that represents registration functional
@@ -71,7 +71,9 @@ export const Register = () => {
         return;
       }
       if (!usernameRegex.test(trimmed)) {
-        setUsernameError('Username should contain latin letters, numbers, and underscores');
+        setUsernameError(
+          'Username should contain latin letters, numbers, and underscores',
+        );
         return;
       }
       setUsernameError('');
@@ -164,8 +166,12 @@ export const Register = () => {
   };
 
   const isFormValid =
-    usernameRegex.test(username.trim()) && passwordRegex.test(password) && confirmPassword === password && !usernameError &&
-    !passwordError && !confirmPasswordError;
+    usernameRegex.test(username.trim()) &&
+    passwordRegex.test(password) &&
+    confirmPassword === password &&
+    !usernameError &&
+    !passwordError &&
+    !confirmPasswordError;
 
   return (
     <Container className="login-container">

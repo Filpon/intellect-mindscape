@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
 import '../../styles/arithmetic/MathQuestion.scss';
+
+import React, { useState } from 'react';
 
 interface MathQuestionProps {
   question: { question: string; correctAnswer: string };

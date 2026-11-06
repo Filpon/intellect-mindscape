@@ -1,7 +1,9 @@
+import '../../styles/Spinner.scss';
+
 import React, { useEffect, useState } from 'react';
+
 import { fetchUserRemarks } from '../../services/remarksService.ts';
 import { Spinner } from '../Spinner.tsx'; // Import the Spinner component
-import '../../styles/Spinner.scss';
 
 interface UserData {
   mode: string;

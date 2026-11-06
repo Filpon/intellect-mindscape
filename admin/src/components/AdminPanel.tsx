@@ -1,8 +1,10 @@
+import '../styles/AdminPanel.scss';
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/AdminPanel.scss';
+
+import { handleNavigate } from '../utils/commonUtils.ts';
 import NavBar from './NavBar.tsx';
-import { handleNavigate } from '../utils/commonUtils.ts'
 
 const AdminPanel: React.FC = () => {
   return (

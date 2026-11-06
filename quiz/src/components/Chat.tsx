@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react';
 import './Chat.scss';
+
+import React, { useEffect, useMemo, useState } from 'react';
 
 interface ChatProps {
   mode: 'music' | 'math';

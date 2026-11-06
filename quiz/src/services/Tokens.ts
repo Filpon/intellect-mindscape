@@ -15,12 +15,28 @@ export const clearTokens = () => {
 };
 
 const storeTokens = (data: any) => {
-  Cookies.set('access_token', data.access_token, { path: '/', maxAge: data.expires_in });
-  const accessExpires = new Date(Date.now() / 1000 + data.expires_in * 1000).toUTCString();
-  Cookies.set('access_expires', accessExpires, { path: '/', maxAge: data.expires_in });
-  Cookies.set('refresh_token', data.refresh_token, { path: '/', maxAge: data.refresh_expires_in });
-  const refreshExpires = new Date(Date.now() / 1000 + data.refresh_expires_in * 1000).toUTCString();
-  Cookies.set('refresh_expires', refreshExpires, { path: '/', maxAge: data.refresh_expires_in });
+  Cookies.set('access_token', data.access_token, {
+    path: '/',
+    maxAge: data.expires_in,
+  });
+  const accessExpires = new Date(
+    Date.now() / 1000 + data.expires_in * 1000,
+  ).toUTCString();
+  Cookies.set('access_expires', accessExpires, {
+    path: '/',
+    maxAge: data.expires_in,
+  });
+  Cookies.set('refresh_token', data.refresh_token, {
+    path: '/',
+    maxAge: data.refresh_expires_in,
+  });
+  const refreshExpires = new Date(
+    Date.now() / 1000 + data.refresh_expires_in * 1000,
+  ).toUTCString();
+  Cookies.set('refresh_expires', refreshExpires, {
+    path: '/',
+    maxAge: data.refresh_expires_in,
+  });
 };
 
 export const checkTokens = async () => {
@@ -29,7 +45,7 @@ export const checkTokens = async () => {
     const response: AxiosResponse = await apiRequestAuth.post(
       '/api-auth/v1/auth/refresh',
       JSON.stringify({
-        token: refreshToken
+        token: refreshToken,
       }),
       {
         headers: {
@@ -60,7 +76,7 @@ export const checkRefreshToken = async () => {
         const response: AxiosResponse = await apiRequestAuth.post(
           '/api-auth/v1/auth/refresh',
           JSON.stringify({
-            token: refreshToken
+            token: refreshToken,
           }),
         );
         if (response.status >= 400) {
@@ -71,7 +87,7 @@ export const checkRefreshToken = async () => {
         storeTokens(data);
       } catch (error) {
         await logout();
-        window.location.href = "/";
+        window.location.href = '/';
         console.error(error);
       }
     }
@@ -106,7 +122,7 @@ export const isAuthenticated = async (): Promise<boolean> => {
     if (!isReturnedAccessTokenActive) {
       console.error('Token is not active');
       await logout();
-      window.location.href = "/";
+      window.location.href = '/';
       return false;
     }
 
@@ -114,7 +130,7 @@ export const isAuthenticated = async (): Promise<boolean> => {
   } catch (error) {
     console.error('Token introspection failed:', error);
     await logout();
-    window.location.href = "/";
+    window.location.href = '/';
     return false;
   }
 };
@@ -124,7 +140,8 @@ export const periodicRefreshAuthCheck = (
   setAuthentication?: Dispatch<SetStateAction<boolean>>,
 ) => {
   const interval = setInterval(async () => {
-    const authenticated = await isAuthenticated(); setAuthentication?.(authenticated);
+    const authenticated = await isAuthenticated();
+    setAuthentication?.(authenticated);
     if (authenticated) {
       await checkTokens();
     }
@@ -149,7 +166,7 @@ export const logout = async () => {
     await apiRequestAuth.post(
       '/api-auth/v1/auth/logout',
       JSON.stringify({
-        token: refreshToken
+        token: refreshToken,
       }),
     );
     // Clear tokens from local storage

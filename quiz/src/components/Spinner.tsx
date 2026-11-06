@@ -1,6 +1,7 @@
 // Spinner.tsx
-import React from 'react';
 import '../styles/Spinner.scss'; // Styles for the spinner
+
+import React from 'react';
 
 const Spinner: React.FC = () => {
   return (

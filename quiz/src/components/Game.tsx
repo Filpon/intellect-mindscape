@@ -1,18 +1,20 @@
+import '../styles/Game.scss';
+
 import React, { useEffect, useState } from 'react';
-import Avatar from './Avatar.tsx';
+
 import { updateGameResults } from '../services/gameService.ts';
 import {
   fetchUserModeStats,
   updateUserModeStats,
 } from '../services/statsService.ts'; // updateModeUserStats
-import InteractiveBassNotesSheet from './music/InteractiveBassNotesSheet.tsx';
-import InteractiveTrebleNotesSheet from './music/InteractiveTrebleNotesSheet.tsx';
+import { checkTokens } from '../services/Tokens.ts';
 import { evaluateTrigonometricFunction } from '../utils/commonUtils.ts';
 import MathQuestion from './arithmetic/MathQuestion.tsx';
-import TrigonometryQuestion from './trigonometry/TrigonometryQuestion.tsx'; // Import the new component
-import '../styles/Game.scss';
+import Avatar from './Avatar.tsx';
+import InteractiveBassNotesSheet from './music/InteractiveBassNotesSheet.tsx';
+import InteractiveTrebleNotesSheet from './music/InteractiveTrebleNotesSheet.tsx';
 import Timer from './Timer.tsx';
-import { checkTokens } from '../services/Tokens.ts';
+import TrigonometryQuestion from './trigonometry/TrigonometryQuestion.tsx'; // Import the new component
 
 type SupportedLanguage = 'en' | 'ru';
 
@@ -41,7 +43,9 @@ const Game: React.FC<GameProps> = ({
     correctAnswer: string;
   }>({ question: '', correctAnswer: '' });
   const [score, setScore] = useState({ correct: 0, incorrect: 0 });
-  const [mode, setMode] = useState<'music' | 'arithmetic' | 'trigonometry' | null>(null); // Default mode
+  const [mode, setMode] = useState<
+    'music' | 'arithmetic' | 'trigonometry' | null
+  >(null); // Default mode
   const [selectedSheet, setSelectedSheet] = useState<'bass' | 'treble' | null>(
     null,
   ); // State for selected sheet
@@ -278,11 +282,12 @@ const Game: React.FC<GameProps> = ({
           <p>
             {translations.incorrect_answers}: {score.incorrect}
           </p>
-          <button onClick={async () => {
-            await checkTokens();
-            window.location.href = "/game";
-          }
-          }>
+          <button
+            onClick={async () => {
+              await checkTokens();
+              window.location.href = '/game';
+            }}
+          >
             {translations.home}
           </button>
         </div>

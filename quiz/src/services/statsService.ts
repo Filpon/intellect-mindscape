@@ -60,8 +60,8 @@ const updateUserModeStats = async (
 };
 
 export {
-  fetchUserStats,
-  fetchUserModeStats,
   createUserModeStats,
+  fetchUserModeStats,
+  fetchUserStats,
   updateUserModeStats,
 };

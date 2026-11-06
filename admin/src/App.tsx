@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+
 import AdminPanel from './components/AdminPanel.tsx';
-import UserList from './components/UserList.tsx';
 import GameSessionList from './components/GameSessionList.tsx';
+import UserList from './components/UserList.tsx';
 import {
   introspectToken,
-  periodicRefreshAuthCheck,
   logout,
+  periodicRefreshAuthCheck,
 } from './services/Tokens.ts';
 
 const App: React.FC = () => {
@@ -48,7 +49,9 @@ const App: React.FC = () => {
     if (process.env.REACT_APP_NODE_MODE === 'development') {
       console.log('Tokens are not refeshed in development mode');
     } else {
-      const seconds = Number(process.env.REACT_APP_REALM_ACCESS_TOKEN_EXPIRES_IN);
+      const seconds = Number(
+        process.env.REACT_APP_REALM_ACCESS_TOKEN_EXPIRES_IN,
+      );
       const cleanup = periodicRefreshAuthCheck(seconds - 1);
       return cleanup; // Cleanup function to clear the interval on unmount
     }
@@ -80,7 +83,13 @@ const App: React.FC = () => {
         />
         <Route
           path="/users"
-          element={isAuth ? <UserList currentUserId={userSubId} /> : <Navigate to="/" />}
+          element={
+            isAuth ? (
+              <UserList currentUserId={userSubId} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
         <Route
           path="/games"

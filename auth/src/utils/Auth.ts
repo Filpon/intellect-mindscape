@@ -1,9 +1,8 @@
+import Cookies from 'js-cookie';
 import { createContext, Dispatch, SetStateAction } from 'react';
 
 import apiRequest from './AxiosRequest.ts';
 import { checkTokens, clearTokens } from './Tokens.ts';
-
-import Cookies from 'js-cookie';
 
 export const AuthContext = createContext({
   authenticated: false,
@@ -39,7 +38,7 @@ export const isAuthenticated = async (): Promise<boolean> => {
     if (!isReturnedAccessTokenActive) {
       console.error('Token is not active');
       await logout();
-      window.location.href = "/"; 
+      window.location.href = '/';
       return false;
     }
 
@@ -47,7 +46,7 @@ export const isAuthenticated = async (): Promise<boolean> => {
   } catch (error) {
     console.error('Token introspection failed:', error);
     await logout();
-    window.location.href = "/"; 
+    window.location.href = '/';
     return false;
   }
 };
@@ -57,7 +56,8 @@ export const periodicRefreshAuthCheck = (
   setAuthentication?: Dispatch<SetStateAction<boolean>>,
 ) => {
   const interval = setInterval(async () => {
-    const authenticated = await isAuthenticated(); setAuthentication?.(authenticated);
+    const authenticated = await isAuthenticated();
+    setAuthentication?.(authenticated);
     if (authenticated) {
       await checkTokens();
     }

@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
-import { handleRegister, updateUserById } from '../services/userService.ts';
 import '../styles/UserForm.scss';
+
 import { AxiosError } from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+
+import { handleRegister, updateUserById } from '../services/userService.ts';
 import { ModalWindow } from './common/ModalWindow.tsx';
 
 interface UserFormProps {

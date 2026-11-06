@@ -1,5 +1,9 @@
+import './styles/App.scss';
+import './styles/Spinner.scss';
+
 import React, { useEffect, useRef, useState } from 'react';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+
 import Game from './components/Game.tsx';
 import Navbar from './components/Navbar.tsx';
 import Remarks from './components/remarks/Remarks.tsx';
@@ -9,11 +13,9 @@ import { apiRequest } from './services/AxiosRequest.ts';
 import {
   checkTokens,
   introspectToken,
-  periodicRefreshAuthCheck,
   logout,
+  periodicRefreshAuthCheck,
 } from './services/Tokens.ts'; // Import the token functions
-import './styles/App.scss';
-import './styles/Spinner.scss';
 
 interface Translations {
   [key: string]: string; // Dynamic keys for translations
@@ -100,7 +102,9 @@ export const App: React.FC = () => {
     if (process.env.REACT_APP_NODE_MODE === 'development') {
       console.log('Tokens are not refeshed in development mode');
     } else {
-      const seconds = Number(process.env.REACT_APP_REALM_ACCESS_TOKEN_EXPIRES_IN);
+      const seconds = Number(
+        process.env.REACT_APP_REALM_ACCESS_TOKEN_EXPIRES_IN,
+      );
       const cleanup = periodicRefreshAuthCheck(seconds - 1);
       return cleanup; // Cleanup function to clear the interval on unmount
     }
@@ -143,7 +147,7 @@ export const App: React.FC = () => {
     await checkTokens();
   };
 
-  const  confirmStartNewGame = async () => {
+  const confirmStartNewGame = async () => {
     const confirmStart = window.confirm(translations.confirm_game_start);
     if (confirmStart) {
       const gameIdValue = await handleStartNewGame();

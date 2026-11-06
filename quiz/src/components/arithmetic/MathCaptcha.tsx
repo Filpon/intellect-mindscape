@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
 import '../../styles/MathCaptcha.scss';
+
+import React, { useState } from 'react';
 
 const MathCaptcha: React.FC = () => {
   const [firstNum] = useState(Math.floor(Math.random() * 10));

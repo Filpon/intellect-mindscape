@@ -1,9 +1,9 @@
 import './App.css';
+
 import React, { FC, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { Home, Login, Register } from './components/index.ts';
-
 import {
   AuthContext,
   isAuthenticated,

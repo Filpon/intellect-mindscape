@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
+
 import { apiRequestAuth, apiRequestAuthNonToken } from './AxiosRequest.ts';
 
 export const fetchUsers = async () => {

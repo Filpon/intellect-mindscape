@@ -1,17 +1,17 @@
 /* eslint-disable max-lines */
-import React, { useEffect, useState, useContext } from 'react'; // useContext
-import { Form, Card, Container, Button, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router';
-import { AxiosError } from 'axios';
-
-import { fetchTokens } from '../utils/Tokens.ts';
-import { AuthContextApp } from '../App.tsx';
 import '../styles/Login.scss';
 import '../styles/Spinner.scss';
-import { ErrorModal } from './ErrorModal.tsx';
 
-import { ReactComponent as VisibleInput } from '../pictures/VisibleInput.svg';
+import { AxiosError } from 'axios';
+import React, { useContext, useEffect, useState } from 'react'; // useContext
+import { Button, Card, Container, Form, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router';
+
+import { AuthContextApp } from '../App.tsx';
 import { ReactComponent as InvisibleInput } from '../pictures/InvisibleInput.svg';
+import { ReactComponent as VisibleInput } from '../pictures/VisibleInput.svg';
+import { fetchTokens } from '../utils/Tokens.ts';
+import { ErrorModal } from './ErrorModal.tsx';
 
 /**
  * Functional component that represents project login page

@@ -1,9 +1,10 @@
+import '../styles/HomePage.scss';
+
 import { FC, useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import { isAuthenticated } from '../utils/Auth.ts';
-import '../styles/HomePage.scss';
 
 /**
  * Functional component that represents project home page
@@ -47,9 +48,7 @@ export const Home: FC = () => {
 
   if (!checked) {
     return (
-      <Container className="home-page-container">
-        Authorization check
-      </Container>
+      <Container className="home-page-container">Authorization check</Container>
     );
   }
 

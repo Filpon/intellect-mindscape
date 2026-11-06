@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
 import '../../styles/Statistics.scss';
 import '../../styles/Spinner.scss';
+
+import React, { useEffect, useState } from 'react';
+
 import { fetchUserStats } from '../../services/statsService.ts';
 import { Spinner } from '../Spinner.tsx'; // Import the Spinner component
 
