@@ -135,6 +135,7 @@ export const App: React.FC = () => {
       });
       if (response.status === 200) {
         setGameStarted(true);
+        await checkTokens();
         return response.data.id; // Return the game_id
       } else {
         alert('Failed to start a new game.');
@@ -143,8 +144,6 @@ export const App: React.FC = () => {
       console.error('Error starting new game:', error);
       alert('Failed to start a new game.');
     }
-
-    await checkTokens();
   };
 
   const confirmStartNewGame = async () => {
