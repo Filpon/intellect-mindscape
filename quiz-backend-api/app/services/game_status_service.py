@@ -1,15 +1,15 @@
 # In app/services/game_status_service.py
 
 from datetime import datetime, timedelta, timezone
+from logging import getLogger
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from app.configs.logging_handler import configure_logging_handler
 from app.database.db import get_db
 from app.database.models import GameStatus
 from app.database.repository.game import CRUDGame
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 # Initialize the scheduler
 scheduler = AsyncIOScheduler()

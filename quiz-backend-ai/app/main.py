@@ -1,14 +1,14 @@
 from contextlib import asynccontextmanager
+from logging import getLogger
 from typing import AsyncGenerator
 
-from app.configs.logging_handler import configure_logging_handler
 from app.kafka.kafka_consumer import kafka_consumer
 from app.routers import study_recommendations
 from app.services.create_recommendations import process_game_messages
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 
 scheduler = AsyncIOScheduler()

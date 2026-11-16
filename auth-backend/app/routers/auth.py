@@ -1,11 +1,11 @@
 import json
+from logging import getLogger
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.responses import JSONResponse, RedirectResponse, Response
 
 from app.caches.keydb import get_cache
-from app.configs.logging_handler import configure_logging_handler
 from app.schemas.auth import (
     CustomOAuth2PasswordRequestForm,
     Token,
@@ -30,7 +30,7 @@ from app.services.keycloak import (
     verify_token,
 )
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 router = APIRouter()
 

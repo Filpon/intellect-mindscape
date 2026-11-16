@@ -1,9 +1,9 @@
 import json
+from logging import getLogger
 
-from app.configs.logging_handler import configure_logging_handler
 from app.utils.keydb import keydb_instance
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 
 def load_translations_key_db(file_path: str) -> None:

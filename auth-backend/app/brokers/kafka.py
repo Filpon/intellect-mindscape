@@ -1,4 +1,5 @@
 import asyncio
+from logging import getLogger
 
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from aiokafka.errors import (
@@ -11,9 +12,7 @@ from aiokafka.errors import (
 )
 from fastapi import HTTPException, status
 
-from app.configs.logging_handler import configure_logging_handler
-
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 
 class KafkaProducer:

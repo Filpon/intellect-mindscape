@@ -1,10 +1,12 @@
+from logging import getLogger
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from app.database.db import get_db
 from app.database.repository.game import CRUDGame
-from app.configs.logging_handler import configure_logging_handler
 from app.utils.keydb import keydb_instance
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 scheduler = AsyncIOScheduler()
 game_crud = CRUDGame()
 

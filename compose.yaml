@@ -216,6 +216,13 @@ services:
       - keycloak-db
       - kafka
       - keydb
+    logging:
+        driver: splunk
+        options:
+          splunk-url: http://127.0.0.1:9428
+          splunk-token: any-token
+          splunk-format: json
+          splunk-verify-connection: "false"
 
   auth:
     build:
@@ -237,6 +244,17 @@ services:
     depends_on:
       - auth-backend
       - keycloak
+  
+  victorialogs:
+    image: docker.io/victoriametrics/victoria-logs:v1.52.0
+    command:
+      - -storageDataPath=/victoria-logs-data
+      - -splunk.msgField=event.line.message,event.line
+      - -splunk.streamFields=event.line.service,event.line.enveronment,event.tag
+    volumes:
+      - victoria-logs-data:/vlogs
+    ports:
+      - "9428:9428"
 
   quiz-backend-ai:
     build:
@@ -295,6 +313,13 @@ services:
       - db
       - kafka
       - keydb
+    logging:
+      driver: splunk
+      options:
+        splunk-url: http://127.0.0.1:9428
+        splunk-token: any-token
+        splunk-format: json
+        splunk-verify-connection: "false"
 
   quiz-backend-chat:
     build:
@@ -442,6 +467,7 @@ volumes:
   quiz:
   admin:
   qdrant_data:
+  victoria-logs-data:
 
 networks:
   intellect-mindscape:

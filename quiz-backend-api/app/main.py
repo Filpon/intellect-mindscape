@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from logging import getLogger
 from pathlib import Path
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -7,7 +8,6 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 
-from app.configs.logging_handler import configure_logging_handler
 from app.database.db import engine, get_db
 from app.database.models import Base
 from app.database.repository.game import CRUDGame
@@ -24,7 +24,7 @@ from app.services.translation_service import load_translations_key_db
 app = FastAPI(docs_url="/api/v1/docs", openapi_url="/api/v1/openapi")
 scheduler = AsyncIOScheduler()
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 KEYCLOAK_URL = os.getenv("KEYCLOAK_URL")
 KC_CLIENT_ID = os.getenv("KC_CLIENT_ID")

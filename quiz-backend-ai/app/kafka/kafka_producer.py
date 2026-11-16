@@ -1,4 +1,5 @@
 import os
+from logging import getLogger
 from typing import Final
 
 from aiokafka import AIOKafkaProducer
@@ -7,11 +8,10 @@ from aiokafka.errors import (
     KafkaError,
     KafkaTimeoutError,
 )
-from app.configs.logging_handler import configure_logging_handler
 from dotenv import load_dotenv
 from fastapi import HTTPException, Request, status
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 load_dotenv()
 

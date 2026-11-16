@@ -1,10 +1,10 @@
 from typing import Awaitable, Callable
 
-from app.configs.logging_handler import configure_logging_handler
+from logging import getLogger
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 
 class LoggingMiddleware(BaseHTTPMiddleware):

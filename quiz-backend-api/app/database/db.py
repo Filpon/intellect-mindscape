@@ -1,14 +1,13 @@
 import os
+from logging import getLogger
 
 from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base
 
-from app.configs.logging_handler import configure_logging_handler
-
 load_dotenv()
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 Base = declarative_base()
 

@@ -1,4 +1,5 @@
 import os
+from logging import getLogger
 from typing import Any, Awaitable, Callable, Optional
 
 from dotenv import load_dotenv
@@ -11,7 +12,6 @@ from slowapi.middleware import SlowAPIASGIMiddleware
 from slowapi.util import get_remote_address
 
 from app.caches.keydb import cache_span
-from app.configs.logging_handler import configure_logging_handler
 from app.middlewares.logging_middleware import LoggingMiddleware
 from app.routers import auth
 from app.services.keycloak import verify_permission
@@ -19,7 +19,7 @@ from app.utils.handlers import rate_limit_exceeded_handler
 
 load_dotenv()  # Environmental variables
 
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 ORIGINS: Optional[str] = os.getenv("ORIGINS")
 

@@ -1,10 +1,9 @@
 import asyncio
+from logging import getLogger
 
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 
-from app.configs.logging_handler import configure_logging_handler
-
-logger = configure_logging_handler()
+logger = getLogger(__name__)
 
 
 class KafkaProducer:
