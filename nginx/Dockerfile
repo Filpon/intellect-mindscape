@@ -1,4 +1,4 @@
-FROM nginx:1.29.2
+FROM nginx:1.31.9
 
 # Copy the NGINX configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
