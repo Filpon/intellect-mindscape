@@ -14,33 +14,32 @@ const TrebleStaff: React.FC<TrebleStaffProps> = ({ correctNote }) => {
   // Function to determine the position of the note on the staff
 
   const notePosition = (note: string) => {
-    const dNoteYValue: number = Math.random() < 0.5 ? 25 : 95;
-    const eNoteYValue: number = Math.random() < 0.5 ? 15 : 85;
+    const dNoteYValue: number = Math.random() < 0.5 ? 28 : 98;
 
     switch (note) {
       case 'C':
       case 'До':
-        return { x: 55, y: 35 }; // Randomly above first string or on fourth string
+        return { x: 80, y: 48 }; // Between 2nd and 3rd string
       case 'D':
       case 'Ре':
-        return { x: 55, y: dNoteYValue }; // Randomly on second string or below fifth string
+        return { x: 80, y: 38 }; // On 2nd string
       case 'E':
       case 'Ми':
-        return { x: 55, y: eNoteYValue }; // Randomly between first and second string or on fifth string
+        return { x: 80, y: dNoteYValue }; // On 5th string
       case 'F':
       case 'Фа':
-        return { x: 55, y: 75 }; // Randomly between first and second string or on fifth string
+        return { x: 80, y: 88 }; // Between 4th and 5th string
       case 'G':
       case 'Соль':
-        return { x: 55, y: 65 }; // Randomly on first string or between fourth and fifth string
+        return { x: 80, y: 78 }; // On 4th string
       case 'A':
       case 'Ля':
-        return { x: 55, y: 55 };
+        return { x: 80, y: 68 };  // Between 3rd and 4th string
       case 'B':
       case 'Си':
-        return { x: 55, y: 45 }; // Randomly on second string or below fifth string
+        return { x: 80, y: 58 }; // On 3rd string
       default:
-        return { x: 55, y: 35 }; // Default position
+        return { x: 80, y: 38 }; // Default position
     }
   };
 
@@ -50,10 +49,11 @@ const TrebleStaff: React.FC<TrebleStaffProps> = ({ correctNote }) => {
   return (
     <div className="treble-staff">
       <svg width="300" height="100" viewBox="0 0 300 100">
-        <line x1="0" y1="20" x2="300" y2="20" stroke="black" strokeWidth="2" />
-        <line x1="0" y1="40" x2="300" y2="40" stroke="black" strokeWidth="2" />
-        <line x1="0" y1="60" x2="300" y2="60" stroke="black" strokeWidth="2" />
-        <line x1="0" y1="80" x2="300" y2="80" stroke="black" strokeWidth="2" />
+        <line x1="0" y1="15" x2="300" y2="15" stroke="black" strokeWidth="3" />
+        <line x1="0" y1="35" x2="300" y2="35" stroke="black" strokeWidth="3" />
+        <line x1="0" y1="55" x2="300" y2="55" stroke="black" strokeWidth="3" />
+        <line x1="0" y1="75" x2="300" y2="75" stroke="black" strokeWidth="3" />
+        <line x1="0" y1="95" x2="300" y2="95" stroke="black" strokeWidth="3" />
 
         {/* Render the correct note on the staff */}
         {position ? (
@@ -68,7 +68,7 @@ const TrebleStaff: React.FC<TrebleStaffProps> = ({ correctNote }) => {
         {/* Treble clef image */}
         <svg
           version="1.2"
-          width="40"
+          width="50"
           height="100"
           viewBox="0 0 9803 30549"
           preserveAspectRatio="xMidYMid"

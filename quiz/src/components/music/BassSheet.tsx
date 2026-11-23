@@ -11,33 +11,32 @@ interface NotePosition {
 
 const BassSheet: React.FC<BassSheetProps> = ({ correctNote }) => {
   // Define the note positions
-  const aNoteYValue: number = Math.random() < 0.5 ? 25 : 95;
-  const bNoteYValue: number = Math.random() < 0.5 ? 15 : 85;
+  const aNoteYValue: number = Math.random() < 0.5 ? 28 : 98;
 
   const notePosition = (note: string) => {
     switch (note) {
       case 'C':
       case 'До':
-        return { x: 55, y: 75 }; // Between 3rd and 4th string
+        return { x: 80, y: 68 }; // Between 3rd and 4th string
       case 'D':
       case 'Ре':
-        return { x: 55, y: 65 }; // On the 3rd string
+        return { x: 80, y: 58 }; // On the 3rd string
       case 'E':
       case 'Ми':
-        return { x: 55, y: 55 }; // Between 2nd and 3rd string
+        return { x: 80, y: 48 }; // Between 2nd and 3rd string
       case 'F':
       case 'Фа':
-        return { x: 55, y: 45 }; // Randomly on 2nd string or below 5th string
+        return { x: 80, y: 38 }; // On 2nd string
       case 'G':
       case 'Соль':
-        return { x: 55, y: 35 }; // Randomly between 1st and 2nd string or on 5th string
+        return { x: 80, y: aNoteYValue }; // Between 1st and 2nd string
       case 'A':
       case 'Ля':
-        return { x: 55, y: aNoteYValue }; // Randomly on 1st string or between 4th and 5th string
+        return { x: 80, y: 88 }; // On 1st string
       case 'Си':
-        return { x: 55, y: bNoteYValue }; // Randomly above 1st string or on 4th string
+        return { x: 80, y: 78 }; // On 4th string
       default:
-        return { x: 55, y: 35 }; // Default position
+        return { x: 80, y: 38 }; // Default position
     }
   };
 
@@ -47,10 +46,11 @@ const BassSheet: React.FC<BassSheetProps> = ({ correctNote }) => {
   return (
     <div className="bass-staff">
       <svg width="300" height="100" viewBox="0 0 300 100">
-        <line x1="0" y1="20" x2="300" y2="20" stroke="black" strokeWidth="2" />
-        <line x1="0" y1="40" x2="300" y2="40" stroke="black" strokeWidth="2" />
-        <line x1="0" y1="60" x2="300" y2="60" stroke="black" strokeWidth="2" />
-        <line x1="0" y1="80" x2="300" y2="80" stroke="black" strokeWidth="2" />
+        <line x1="0" y1="15" x2="300" y2="15" stroke="black" strokeWidth="3" />
+        <line x1="0" y1="35" x2="300" y2="35" stroke="black" strokeWidth="3" />
+        <line x1="0" y1="55" x2="300" y2="55" stroke="black" strokeWidth="3" />
+        <line x1="0" y1="75" x2="300" y2="75" stroke="black" strokeWidth="3" />
+        <line x1="0" y1="95" x2="300" y2="95" stroke="black" strokeWidth="3" />
 
         {/* Render the correct note on the staff */}
         {position ? (
@@ -66,8 +66,8 @@ const BassSheet: React.FC<BassSheetProps> = ({ correctNote }) => {
         {/* Bass clef SVG */}
         <svg
           version="1.2"
-          width="103"
-          height="170"
+          width="155"
+          height="242"
           viewBox="0 0 1689 2760"
           preserveAspectRatio="xMidYMid"
           fill-rule="evenodd"
@@ -76,8 +76,8 @@ const BassSheet: React.FC<BassSheetProps> = ({ correctNote }) => {
           xmlSpace="preserve"
           id="svg23"
           xmlns="http://www.w3.org/2000/svg"
-          x="-9"
-          y="12"
+          x="-16"
+          y="1"
         >
           <defs className="ClipPathGroup" id="defs2">
             <clipPath
